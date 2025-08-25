@@ -5,110 +5,67 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>ETF Watchlist — Live Dashboard</title>
 <style>
-/* ====== THEME (refined dark navy) ====== */
 :root{
-  --bg-1:#0b1220;        /* page bg */
-  --bg-2:#121a2b;        /* card bg */
-  --bg-3:#1a2438;        /* header/table head */
-  --line:#232e47;        /* borders */
-  --txt-1:#eaf0ff;       /* primary text */
-  --txt-2:#97a6c3;       /* secondary text */
-  --acc-1:#00d4ff;       /* cyan accent */
-  --acc-2:#64ffda;       /* mint accent */
-  --pos:#00c896;         /* positive */
-  --neg:#ff4b5c;         /* negative */
-  --warn:#f5a524;        /* warning */
-  --shadow:0 12px 28px rgba(0,0,0,.35);
+  --bg-1:#0b1220;--bg-2:#121a2b;--bg-3:#1a2438;--line:#232e47;
+  --txt-1:#eaf0ff;--txt-2:#97a6c3;--acc-1:#00d4ff;--acc-2:#64ffda;
+  --pos:#00c896;--neg:#ff4b5c;--warn:#f5a524;--shadow:0 12px 28px rgba(0,0,0,.35)
 }
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
-body{
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  background: radial-gradient(1200px 800px at 10% -10%, #152036 0%, transparent 60%),
-              radial-gradient(1200px 800px at 90% 10%, #0f1a2e 0%, transparent 55%),
-              var(--bg-1);
-  color:var(--txt-1);
-  line-height:1.55;
-}
-
-/* ====== LAYOUT ====== */
+*{box-sizing:border-box} html,body{margin:0;padding:0}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;
+  background:radial-gradient(1200px 800px at 10% -10%,#152036 0%,transparent 60%),
+             radial-gradient(1200px 800px at 90% 10%,#0f1a2e 0%,transparent 55%),var(--bg-1);
+  color:var(--txt-1);line-height:1.55}
 .container{max-width:1200px;margin:0 auto;padding:20px}
-.header{
-  background:linear-gradient(180deg,var(--bg-3),var(--bg-2));
-  border:1px solid var(--line);
+.header{background:linear-gradient(180deg,var(--bg-3),var(--bg-2));border:1px solid var(--line);
   border-radius:16px;padding:22px 22px 18px;box-shadow:var(--shadow);margin-bottom:18px}
 .header-top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
-.title{font-size:28px;font-weight:800;
-  background:linear-gradient(135deg,var(--acc-1),var(--acc-2));
+.title{font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--acc-1),var(--acc-2));
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .subtitle{color:var(--txt-2);font-size:14px}
 .actions{display:flex;gap:10px;align-items:center}
-.btn{
-  background:linear-gradient(135deg,var(--acc-1),#0ea5e9);
-  color:#00131c;border:none;border-radius:10px;padding:10px 14px;font-weight:700;
-  cursor:pointer;box-shadow:0 6px 16px rgba(0,212,255,.25);transition:.18s}
+.btn{background:linear-gradient(135deg,var(--acc-1),#0ea5e9);color:#00131c;border:none;border-radius:10px;
+  padding:10px 14px;font-weight:700;cursor:pointer;box-shadow:0 6px 16px rgba(0,212,255,.25);transition:.18s}
 .btn:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(0,212,255,.35)}
 .btn:disabled{opacity:.65;cursor:not-allowed;transform:none}
 .link-btn{background:transparent;border:1px solid var(--line);color:var(--txt-1)}
 .last{color:var(--txt-2);font-size:13px}
-
-/* Summary grid */
 .summary{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:12px 0}
-.card{
-  background:var(--bg-2);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+.card{background:var(--bg-2);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
 .metric{font-size:22px;font-weight:800;margin-bottom:4px}
 .label{color:var(--txt-2);font-size:12px}
-
-/* Filters & search */
-.toolbar{
-  display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0 16px}
-.pill{
-  background:transparent;border:1px solid var(--line);color:var(--txt-1);
-  padding:8px 12px;border-radius:999px;font-size:13px;cursor:pointer}
-.pill.active{background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(100,255,218,.15));
-  border-color:#214d5a}
-.search{
-  flex:1;min-width:200px;background:var(--bg-1);border:1px solid var(--line);color:var(--txt-1);
-  padding:9px 12px;border-radius:10px}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0 16px}
+.pill{background:transparent;border:1px solid var(--line);color:var(--txt-1);padding:8px 12px;border-radius:999px;font-size:13px;cursor:pointer}
+.pill.active{background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(100,255,218,.15));border-color:#214d5a}
+.search{flex:1;min-width:200px;background:var(--bg-1);border:1px solid var(--line);color:var(--txt-1);padding:9px 12px;border-radius:10px}
 .note{color:var(--txt-2);font-size:12px}
-
-/* Movers panels */
 .panels{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .panel{background:var(--bg-2);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
 .panel h3{margin:0;padding:12px 14px;background:var(--bg-3);border-bottom:1px solid var(--line);font-size:14px}
 .list{list-style:none;margin:0;padding:8px 12px}
 .item{display:flex;justify-content:space-between;gap:10px;padding:8px 6px;border-bottom:1px dashed rgba(255,255,255,.05)}
 .item:last-child{border-bottom:none}
-.badge{
-  padding:4px 8px;border-radius:8px;font-weight:700;font-size:12px;display:inline-block}
-.badge-pos{background:linear-gradient(135deg,var(--pos),#2dd4bf);color:white}
-.badge-neg{background:linear-gradient(135deg,var(--neg),#ef4444);color:white}
-
-/* Table */
+.badge{padding:4px 8px;border-radius:8px;font-weight:700;font-size:12px;display:inline-block}
+.badge-pos{background:linear-gradient(135deg,var(--pos),#2dd4bf);color:#fff}
+.badge-neg{background:linear-gradient(135deg,var(--neg),#ef4444);color:#fff}
 .table-wrap{background:var(--bg-2);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
 .table-head{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--bg-3);border-bottom:1px solid var(--line)}
 .table-title{font-weight:700}
 .status{font-size:12px;border-radius:8px;padding:6px 10px}
 .status.ok{background:rgba(39,174,96,.18);color:#2ecc71}
 .status.err{background:rgba(255,71,87,.18);color:#ff4b5c}
-
 table{width:100%;border-collapse:collapse}
 th,td{padding:12px 10px;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px}
 thead th{position:sticky;top:0;background:var(--bg-3);text-align:left;color:var(--txt-2);text-transform:uppercase;letter-spacing:.6px;cursor:pointer}
 tbody tr:hover{background:rgba(0,212,255,.05)}
 .ticker{font-weight:800;color:var(--acc-1)}
-.price{font-family:JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, monospace}
+.price{font-family:JetBrains Mono,ui-monospace,Menlo,monospace}
 .daily{font-weight:800;padding:6px 10px;border-radius:8px;display:inline-block;min-width:84px;text-align:center}
-.pos{background:linear-gradient(135deg,var(--pos),#2dd4bf);color:white}
-.neg{background:linear-gradient(135deg,var(--neg),#ef4444);color:white}
-.neu{background:linear-gradient(135deg,#6b7280,#9ca3af);color:white}
+.pos{background:linear-gradient(135deg,var(--pos),#2dd4bf);color:#fff}
+.neg{background:linear-gradient(135deg,var(--neg),#ef4444);color:#fff}
+.neu{background:linear-gradient(135deg,#6b7280,#9ca3af);color:#fff}
 .kit{display:inline-block;border:1px solid var(--line);border-radius:8px;padding:3px 6px;font-size:12px;margin-right:4px;color:var(--txt-2)}
 .risk{font-weight:700}
-
-/* Footer */
 .foot{color:var(--txt-2);font-size:12px;margin:10px 2px}
-
-/* Utilities & responsive */
 .hidden{display:none}
 @media (max-width:1020px){.summary{grid-template-columns:repeat(3,1fr)}.panels{grid-template-columns:1fr}}
 @media (max-width:680px){.summary{grid-template-columns:repeat(2,1fr)} .toolbar{flex-direction:column;align-items:stretch}}
@@ -116,7 +73,6 @@ tbody tr:hover{background:rgba(0,212,255,.05)}
 </head>
 <body>
 <div class="container">
-  <!-- HEADER -->
   <div class="header">
     <div class="header-top">
       <div>
@@ -149,7 +105,6 @@ tbody tr:hover{background:rgba(0,212,255,.05)}
     </div>
   </div>
 
-  <!-- MOVERS -->
   <div class="panels">
     <div class="panel">
       <h3>Top 5 Gainers</h3>
@@ -161,11 +116,10 @@ tbody tr:hover{background:rgba(0,212,255,.05)}
     </div>
   </div>
 
-  <!-- TABLE -->
   <div class="table-wrap">
     <div class="table-head">
       <div class="table-title">Market Data</div>
-      <div class="status ok" id="status">✅ Live (Yahoo via proxy)</div>
+      <div class="status ok" id="status">✅ Live</div>
     </div>
     <div style="overflow-x:auto">
       <table id="tbl">
@@ -188,11 +142,11 @@ tbody tr:hover{background:rgba(0,212,255,.05)}
     </div>
   </div>
 
-  <div class="foot">Tip: Click a column header to sort • Use the pills to filter categories • Search narrows the table & movers.</div>
+  <div class="foot">Click headers to sort • Filter with pills • Search narrows table & movers.</div>
 </div>
 
 <script>
-/* ====== CONFIG (tickers + metadata + categories) ====== */
+/* ---------- CONFIG ---------- */
 const TICKERS = [
   "TLT","IEF","AGG","BND","CGCP","SHY","TLTW","AGGH",
   "SCHD","DVY","DGRO","VTV","FDL","DIVO","FDVV","SPYV","DIVB","DGRW","CGDV","VIG",
@@ -253,164 +207,144 @@ const META = {
   XSMO:{yield:"<1%",expense:"0.39%",assets:"$1.5 B",frequency:"Quarterly",strategy:"Small Cap Growth",risk:"Very High"}
 };
 
-// Category tagging (explicit)
 const CATEGORY_MAP = {
-  "Bonds": ["TLT","IEF","AGG","BND","CGCP","SHY"],
-  "High Income": ["JEPI","JEPQ","GPIQ","QQQI","GPIX","SPYI","QDVO","RSPA","IWMI","BALI","TLTW","AGGH","IDVO"],
-  "Dividend": ["SCHD","DVY","DGRO","VTV","FDL","DIVO","FDVV","SPYV","DIVB","DGRW","CGDV","VIG","VYMI"],
-  "Growth": ["SPY","VOO","QQQ","QQQM","SCHG","GARP","SPMO","SMH","VFLO","JQUA","CGGR","IWM","AVUV","XMMO","XSMO","CGCV","HELO"]
+  "Bonds":["TLT","IEF","AGG","BND","CGCP","SHY"],
+  "High Income":["JEPI","JEPQ","GPIQ","QQQI","GPIX","SPYI","QDVO","RSPA","IWMI","BALI","TLTW","AGGH","IDVO"],
+  "Dividend":["SCHD","DVY","DGRO","VTV","FDL","DIVO","FDVV","SPYV","DIVB","DGRW","CGDV","VIG","VYMI"],
+  "Growth":["SPY","VOO","QQQ","QQQM","SCHG","GARP","SPMO","SMH","VFLO","JQUA","CGGR","IWM","AVUV","XMMO","XSMO","CGCV","HELO"]
 };
 
-/* ====== DATA STATE ====== */
-let rowsRaw = [];      // { symbol, price, changePercent, ... } from Yahoo
-let etfData = [];      // merged with META + category
-let filterCat = "All";
-let searchTerm = "";
-let sortCol = "ticker";
-let sortDir = -1; // desc
+/* ---------- STATE ---------- */
+let rowsRaw=[]; let etfData=[];
+let filterCat="All"; let searchTerm="";
+let sortCol="ticker"; let sortDir=-1;
 
-/* ====== FETCH (Yahoo via CORS proxy) ====== */
+/* ---------- FETCH (robust multi-proxy) ---------- */
 async function fetchYahooChunk(symbols){
-  const yahooURL = "https://query1.finance.yahoo.com/v7/finance/quote?symbols=" + encodeURIComponent(symbols.join(","));
-  const tryUrls = [
-    "https://api.allorigins.win/raw?url=" + encodeURIComponent(yahooURL),
-    "https://r.jina.ai/http://" + "query1.finance.yahoo.com/v7/finance/quote?symbols=" + encodeURIComponent(symbols.join(","))
+  const base = "https://query1.finance.yahoo.com/v7/finance/quote?symbols=" + encodeURIComponent(symbols.join(","));
+  const candidates = [
+    "https://cors.isomorphic-git.org/" + base,
+    "https://api.allorigins.win/raw?url=" + encodeURIComponent(base),
+    "https://thingproxy.freeboard.io/fetch/" + base
   ];
-  for (const url of tryUrls){
+  for (const url of candidates){
     try{
-      const res = await fetch(url, { cache: "no-store" });
+      const res = await fetch(url, { cache:"no-store" });
       if (!res.ok) continue;
-      const json = await res.json();
-      const items = json?.quoteResponse?.result ?? [];
-      return items.map(it => ({
+      let data;
+      const ct = res.headers.get("content-type") || "";
+      if (ct.includes("application/json")) {
+        data = await res.json();
+      } else {
+        const txt = await res.text();
+        data = JSON.parse(txt);
+      }
+      const items = data?.quoteResponse?.result ?? [];
+      if (!Array.isArray(items)) continue;
+      return items.map(it=>({
         symbol: it.symbol,
-        price: isFinite(it.regularMarketPrice) ? it.regularMarketPrice : null,
-        changePercent: isFinite(it.regularMarketChangePercent) ? it.regularMarketChangePercent : null,
-        prevClose: isFinite(it.regularMarketPreviousClose) ? it.regularMarketPreviousClose : null,
-        time: it.regularMarketTime ? new Date(it.regularMarketTime*1000).toISOString() : null,
-        source: "Yahoo"
+        price: Number.isFinite(it.regularMarketPrice)? it.regularMarketPrice : null,
+        changePercent: Number.isFinite(it.regularMarketChangePercent)? it.regularMarketChangePercent : null,
+        prevClose: Number.isFinite(it.regularMarketPreviousClose)? it.regularMarketPreviousClose : null,
+        time: it.regularMarketTime? new Date(it.regularMarketTime*1000).toISOString() : null,
+        source:"Yahoo"
       }));
-    }catch(e){ /* try next */ }
+    }catch(e){ /* try next proxy */ }
   }
   throw new Error("All quote proxies failed");
 }
 
 async function fetchAllQuotes(){
-  const CHUNK = 45;
-  let out = [];
-  for (let i=0; i<TICKERS.length; i+=CHUNK){
-    const slice = TICKERS.slice(i, i+CHUNK);
-    const part = await fetchYahooChunk(slice);
+  const CHUNK=45; let out=[];
+  for (let i=0;i<TICKERS.length;i+=CHUNK){
+    const part = await fetchYahooChunk(TICKERS.slice(i,i+CHUNK));
     out = out.concat(part);
-    await new Promise(r=>setTimeout(r, 200));
+    await new Promise(r=>setTimeout(r,180));
   }
   return out;
 }
 
-/* ====== TRANSFORM + RENDER ====== */
+/* ---------- TRANSFORM ---------- */
 function buildData(){
   const catOf = (sym)=>{
-    for (const [c,list] of Object.entries(CATEGORY_MAP)){
-      if (list.includes(sym)) return c;
-    }
+    for (const [c,list] of Object.entries(CATEGORY_MAP)) if (list.includes(sym)) return c;
     return "Uncategorized";
   };
   etfData = rowsRaw.map(r=>{
     const m = META[r.symbol] || {};
     return {
-      ticker: r.symbol,
-      price: r.price,
-      dailyReturn: r.changePercent,
-      yield: m.yield || "—",
-      expense: m.expense || "—",
-      assets: m.assets || "—",
-      frequency: m.frequency || "—",
-      strategy: m.strategy || "—",
-      risk: m.risk || "—",
-      category: catOf(r.symbol),
-      source: r.source
+      ticker:r.symbol, price:r.price, dailyReturn:r.changePercent,
+      yield:m.yield||"—", expense:m.expense||"—", assets:m.assets||"—",
+      frequency:m.frequency||"—", strategy:m.strategy||"—", risk:m.risk||"—",
+      category:catOf(r.symbol)
     };
   });
 }
 
-function fmtPct(x){
-  if (!isFinite(x)) return "—";
-  const sign = x>0?"+":"";
-  return `${sign}${x.toFixed(2)}%`;
-}
-function fmtPrice(x){ return isFinite(x) ? x.toFixed(2) : "—"; }
+/* ---------- RENDER ---------- */
+function fmtPct(x){ if(!isFinite(x)) return "—"; const s=x>0?"+":""; return s + x.toFixed(2) + "%"; }
+function fmtPrice(x){ return isFinite(x)? x.toFixed(2) : "—"; }
 
 function renderSummary(){
   const total = etfData.length;
-  const vals = etfData.map(e=>e.dailyReturn).filter(x=>isFinite(x));
-  const gainers = vals.filter(x=>x>0).length;
-  const losers = vals.filter(x=>x<0).length;
+  const vals = etfData.map(e=>e.dailyReturn).filter(Number.isFinite);
+  const gainers = vals.filter(v=>v>0).length;
+  const losers = vals.filter(v=>v<0).length;
   const avg = vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : NaN;
-  const eqw = avg; // equal-weight day return ~= average of daily pct changes
-
   document.getElementById("m_total").textContent = total;
   document.getElementById("m_gainers").textContent = gainers;
   document.getElementById("m_losers").textContent = losers;
-  document.getElementById("m_avg").textContent = isFinite(avg)? fmtPct(avg) : "—";
-  document.getElementById("m_eqw").textContent = isFinite(eqw)? fmtPct(eqw) : "—";
+  document.getElementById("m_avg").textContent = Number.isFinite(avg)? fmtPct(avg) : "—";
+  document.getElementById("m_eqw").textContent = Number.isFinite(avg)? fmtPct(avg) : "—";
 }
 
 function filtered(){
+  const q = (searchTerm||"").toLowerCase();
   return etfData.filter(e=>{
     const catOK = (filterCat==="All") || (e.category===filterCat);
-    const q = searchTerm.trim().toLowerCase();
-    const qOK = !q || [e.ticker, e.strategy, e.category].join(" ").toLowerCase().includes(q);
+    const qOK = !q || [e.ticker,e.strategy,e.category].join(" ").toLowerCase().includes(q);
     return catOK && qOK;
   });
 }
 
 function renderMovers(){
-  const data = filtered().filter(e=>isFinite(e.dailyReturn));
-  const sortedAsc = [...data].sort((a,b)=>a.dailyReturn-b.dailyReturn);
-  const losers = sortedAsc.slice(0,5);
-  const gainers = [...data].sort((a,b)=>b.dailyReturn-a.dailyReturn).slice(0,5);
-
-  const gl = document.getElementById("gainersList");
-  const ll = document.getElementById("losersList");
-  gl.innerHTML = ""; ll.innerHTML = "";
-
-  gainers.forEach(e=>{
-    const li = document.createElement("li"); li.className="item";
-    li.innerHTML = `<span><strong>${e.ticker}</strong> <span class="kit">${e.category}</span></span>
-                    <span class="badge badge-pos">+${e.dailyReturn.toFixed(2)}%</span>`;
+  const data = filtered().filter(e=>Number.isFinite(e.dailyReturn));
+  const top = [...data].sort((a,b)=>b.dailyReturn-a.dailyReturn).slice(0,5);
+  const bot = [...data].sort((a,b)=>a.dailyReturn-b.dailyReturn).slice(0,5);
+  const gl = document.getElementById("gainersList"); const ll = document.getElementById("losersList");
+  gl.innerHTML=""; ll.innerHTML="";
+  top.forEach(e=>{
+    const li=document.createElement("li"); li.className="item";
+    li.innerHTML=`<span><strong>${e.ticker}</strong> <span class="kit">${e.category}</span></span>
+                  <span class="badge badge-pos">+${e.dailyReturn.toFixed(2)}%</span>`;
     gl.appendChild(li);
   });
-  losers.forEach(e=>{
-    const li = document.createElement("li"); li.className="item";
-    li.innerHTML = `<span><strong>${e.ticker}</strong> <span class="kit">${e.category}</span></span>
-                    <span class="badge badge-neg">${e.dailyReturn.toFixed(2)}%</span>`;
+  bot.forEach(e=>{
+    const li=document.createElement("li"); li.className="item";
+    li.innerHTML=`<span><strong>${e.ticker}</strong> <span class="kit">${e.category}</span></span>
+                  <span class="badge badge-neg">${e.dailyReturn.toFixed(2)}%</span>`;
     ll.appendChild(li);
   });
 }
 
 function renderTable(){
-  const body = document.getElementById("tbody");
-  let data = filtered();
-
+  const body=document.getElementById("tbody");
+  let data=filtered();
   data.sort((a,b)=>{
-    let av=a[sortCol], bv=b[sortCol];
-    if (typeof av==="number" && typeof bv==="number"){
-      return sortDir*(bv-av);
-    }
+    const av=a[sortCol], bv=b[sortCol];
+    if (typeof av==="number" && typeof bv==="number") return sortDir*(bv-av);
     return sortDir*String(av??"").localeCompare(String(bv??""));
   });
-
-  body.innerHTML = "";
+  body.innerHTML="";
   data.forEach(e=>{
-    const cls = !isFinite(e.dailyReturn) ? "neu" : (e.dailyReturn>0?"pos":(e.dailyReturn<0?"neg":"neu"));
+    const cls = !Number.isFinite(e.dailyReturn) ? "neu" : (e.dailyReturn>0?"pos":(e.dailyReturn<0?"neg":"neu"));
     const riskColor =
       /Very High/.test(e.risk) ? "#ff4b5c" :
       /High/.test(e.risk) ? "#f5a524" :
       /Medium/.test(e.risk) ? "#4f6fff" :
       /Low/.test(e.risk) ? "#2ed573" : "#9ca3af";
-
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
       <td><span class="ticker">${e.ticker}</span></td>
       <td class="price">${fmtPrice(e.price)}</td>
       <td><span class="daily ${cls}">${fmtPct(e.dailyReturn)}</span></td>
@@ -420,86 +354,69 @@ function renderTable(){
       <td>${e.frequency}</td>
       <td>${e.strategy}</td>
       <td><span class="risk" style="color:${riskColor}">${e.risk}</span></td>
-      <td><span class="kit">${e.category}</span></td>
-    `;
+      <td><span class="kit">${e.category}</span></td>`;
     body.appendChild(tr);
   });
 }
 
-/* ====== CSV EXPORT ====== */
+/* ---------- CSV ---------- */
 function toCSV(rows){
-  const header = ["Ticker","Price","DailyReturn(%)","Yield","Expense","Assets","Frequency","Strategy","Risk","Category"];
-  const esc = s => `"${String(s??"").replace(/"/g,'""')}"`;
-  const lines = [header.join(",")];
+  const header=["Ticker","Price","DailyReturn(%)","Yield","Expense","Assets","Frequency","Strategy","Risk","Category"];
+  const esc=s=>`"${String(s??"").replace(/"/g,'""')}"`;
+  const out=[header.join(",")];
   rows.forEach(e=>{
-    lines.push([e.ticker, fmtPrice(e.price), isFinite(e.dailyReturn)?e.dailyReturn.toFixed(4):"", e.yield, e.expense, e.assets, e.frequency, e.strategy, e.risk, e.category].map(esc).join(","));
+    out.push([e.ticker,fmtPrice(e.price),
+      Number.isFinite(e.dailyReturn)?e.dailyReturn.toFixed(4):"",
+      e.yield,e.expense,e.assets,e.frequency,e.strategy,e.risk,e.category].map(esc).join(","));
   });
-  return lines.join("\n");
+  return out.join("\n");
 }
-
 function downloadCSV(){
-  const data = filtered();
-  const blob = new Blob([toCSV(data)], {type:"text/csv;charset=utf-8"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url; a.download = "etf_watchlist.csv"; a.click();
-  URL.revokeObjectURL(url);
+  const blob=new Blob([toCSV(filtered())],{type:"text/csv;charset=utf-8"});
+  const url=URL.createObjectURL(blob); const a=document.createElement("a");
+  a.href=url; a.download="etf_watchlist.csv"; a.click(); URL.revokeObjectURL(url);
 }
 
-/* ====== MAIN LOAD ====== */
+/* ---------- MAIN ---------- */
 async function load(){
-  const btn = document.getElementById("refreshBtn");
-  const status = document.getElementById("status");
-  const last = document.getElementById("lastUpdated");
-  btn.disabled = true;
-  status.className = "status ok";
-  status.textContent = "⏳ Updating…";
-
+  const btn=document.getElementById("refreshBtn");
+  const status=document.getElementById("status");
+  const last=document.getElementById("lastUpdated");
+  btn.disabled=true; status.className="status ok"; status.textContent="⏳ Updating…";
   try{
-    rowsRaw = await fetchAllQuotes();
-    buildData();
-    renderSummary();
-    renderMovers();
-    renderTable();
-    status.className = "status ok";
-    status.textContent = "✅ Live (Yahoo via proxy)";
-    last.textContent = "Last updated: " + new Date().toLocaleString();
-  }catch(e){
-    console.error(e);
-    status.className = "status err";
-    status.textContent = "❌ Data Error";
-  }finally{
-    btn.disabled = false;
-  }
+    rowsRaw=await fetchAllQuotes();
+    if(!rowsRaw.length) throw new Error("No data received");
+    buildData(); renderSummary(); renderMovers(); renderTable();
+    status.className="status ok"; status.textContent="✅ Live";
+    last.textContent="Last updated: "+new Date().toLocaleString();
+  }catch(err){
+    console.error(err);
+    status.className="status err";
+    status.textContent="❌ Data error — proxies may be rate-limited. Try Refresh.";
+  }finally{ btn.disabled=false; }
 }
 
-/* ====== UI HOOKS ====== */
+/* ---------- UI HOOKS ---------- */
 document.getElementById("refreshBtn").addEventListener("click", load);
 document.getElementById("csvBtn").addEventListener("click", downloadCSV);
-
 document.querySelectorAll(".pill").forEach(p=>{
-  p.addEventListener("click", ()=>{
+  p.addEventListener("click",()=>{
     document.querySelectorAll(".pill").forEach(x=>x.classList.remove("active"));
-    p.classList.add("active");
-    filterCat = p.getAttribute("data-cat");
+    p.classList.add("active"); filterCat=p.getAttribute("data-cat");
     renderMovers(); renderTable();
   });
 });
-
-document.getElementById("searchBox").addEventListener("input", (e)=>{
-  searchTerm = e.target.value || "";
-  renderMovers(); renderTable();
+document.getElementById("searchBox").addEventListener("input",(e)=>{
+  searchTerm=e.target.value||""; renderMovers(); renderTable();
 });
-
 document.querySelectorAll("th[data-col]").forEach(th=>{
-  th.addEventListener("click", ()=>{
-    const col = th.getAttribute("data-col");
-    if (sortCol===col){ sortDir*=-1; } else { sortCol=col; sortDir=-1; }
+  th.addEventListener("click",()=>{
+    const col=th.getAttribute("data-col");
+    if(sortCol===col){sortDir*=-1}else{sortCol=col;sortDir=-1}
     renderTable();
   });
 });
 
-/* Initial load + auto refresh */
 load();
 setInterval(load, 60*1000);
 </script>
