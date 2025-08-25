@@ -67,9 +67,6 @@ tbody tr:hover{background:rgba(0,212,255,.05)}
 .risk{font-weight:700}
 .foot{color:var(--txt-2);font-size:12px;margin:10px 2px}
 .hidden{display:none}
-.api-box{display:flex;gap:8px;align-items:center}
-.api-input{background:var(--bg-1);border:1px solid var(--line);color:var(--txt-1);padding:8px 10px;border-radius:8px;min-width:240px}
-.api-save{border:1px solid var(--line);background:transparent;color:var(--txt-1);padding:8px 10px;border-radius:8px;cursor:pointer}
 @media (max-width:1020px){.summary{grid-template-columns:repeat(3,1fr)}.panels{grid-template-columns:1fr}}
 @media (max-width:680px){.summary{grid-template-columns:repeat(2,1fr)} .toolbar{flex-direction:column;align-items:stretch}}
 </style>
@@ -87,19 +84,7 @@ tbody tr:hover{background:rgba(0,212,255,.05)}
         <button class="btn link-btn" id="csvBtn">⬇️ Export CSV</button>
       </div>
     </div>
-
     <div class="last" id="lastUpdated">Ready…</div>
-
-    <!-- Finnhub key (optional, best) -->
-    <div class="toolbar" style="margin-top:8px">
-      <div class="api-box">
-        <span class="note">Prefer rock-solid live data?</span>
-        <input id="fhInput" class="api-input" placeholder="Paste FINNHUB API key (optional)" />
-        <button id="fhSave" class="api-save">Save Key</button>
-        <span id="fhStatus" class="note"></span>
-      </div>
-    </div>
-
     <div class="summary">
       <div class="card"><div class="metric" id="m_total">-</div><div class="label">Total ETFs</div></div>
       <div class="card"><div class="metric" id="m_gainers">-</div><div class="label">Gainers</div></div>
@@ -107,7 +92,6 @@ tbody tr:hover{background:rgba(0,212,255,.05)}
       <div class="card"><div class="metric" id="m_avg">-</div><div class="label">Avg Daily Return</div></div>
       <div class="card"><div class="metric" id="m_eqw">-</div><div class="label">Equal-Weight Day Return</div></div>
     </div>
-
     <div class="toolbar">
       <div>
         <button class="pill active" data-cat="All">All</button>
@@ -117,7 +101,7 @@ tbody tr:hover{background:rgba(0,212,255,.05)}
         <button class="pill" data-cat="Growth">Growth</button>
       </div>
       <input class="search" id="searchBox" placeholder="Search ticker or strategy…" />
-      <div class="note" id="sourceNote">Auto-refresh every 60s • Source: Yahoo (no key) or Finnhub (with key)</div>
+      <div class="note" id="sourceNote">Auto-refresh every 60s • Source: Finnhub (browser key)</div>
     </div>
   </div>
 
@@ -162,7 +146,10 @@ tbody tr:hover{background:rgba(0,212,255,.05)}
 </div>
 
 <script>
-/* ---------------- CONFIG ---------------- */
+/* ====== YOUR FINNHUB KEY (embedded) ====== */
+const DEFAULT_FINNHUB_KEY = "d2mco11r01qog4432megd2mco11r01qog4432mf0";
+
+/* ====== CONFIG ====== */
 const TICKERS = [
   "TLT","IEF","AGG","BND","CGCP","SHY","TLTW","AGGH",
   "SCHD","DVY","DGRO","VTV","FDL","DIVO","FDVV","SPYV","DIVB","DGRW","CGDV","VIG",
@@ -230,28 +217,12 @@ const CATEGORY_MAP = {
   "Growth":["SPY","VOO","QQQ","QQQM","SCHG","GARP","SPMO","SMH","VFLO","JQUA","CGGR","IWM","AVUV","XMMO","XSMO","CGCV","HELO"]
 };
 
-/* ---------------- STATE ---------------- */
+/* ====== STATE ====== */
 let rowsRaw=[]; let etfData=[];
 let filterCat="All"; let searchTerm="";
 let sortCol="ticker"; let sortDir=-1;
 
-const fhInput = document.getElementById('fhInput');
-const fhSave  = document.getElementById('fhSave');
-const fhStatus= document.getElementById('fhStatus');
-const sourceNote = document.getElementById('sourceNote');
-
-(function initFinnhub(){
-  const saved = localStorage.getItem('FINNHUB_KEY');
-  if (saved){ fhInput.value = saved; fhStatus.textContent = "Key loaded."; }
-  fhSave.addEventListener('click', ()=>{
-    const v = fhInput.value.trim();
-    if (v){ localStorage.setItem('FINNHUB_KEY', v); fhStatus.textContent = "Saved."; load(); }
-    else { localStorage.removeItem('FINNHUB_KEY'); fhStatus.textContent = "Cleared."; load(); }
-  });
-})();
-
-/* ---------------- FETCHERS ---------------- */
-// A) Finnhub (best): one call per symbol, CORS OK
+/* ====== FINNHUB FETCH ====== */
 async function fetchFinnhubAll(symbols, key){
   const base = "https://finnhub.io/api/v1/quote?symbol=";
   const out = [];
@@ -267,59 +238,12 @@ async function fetchFinnhubAll(symbols, key){
       time: j.t ? new Date(j.t*1000).toISOString() : null,
       source: "Finnhub"
     });
-    await new Promise(r=>setTimeout(r, 80)); // be kind to rate limit
+    await new Promise(r=>setTimeout(r, 80)); // gentle pacing
   }
   return out;
 }
 
-// B) Yahoo via multiple proxies (fallback, no key)
-async function fetchYahooChunk(symbols){
-  const base = "https://query1.finance.yahoo.com/v7/finance/quote?symbols=" + encodeURIComponent(symbols.join(","));
-  const proxies = [
-    (url)=>"https://cors.isomorphic-git.org/" + url,
-    (url)=>"https://api.allorigins.win/raw?url=" + encodeURIComponent(url),
-    (url)=>"https://thingproxy.freeboard.io/fetch/" + url
-  ];
-  // randomize proxy order per chunk
-  for (let i = proxies.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1)); [proxies[i], proxies[j]] = [proxies[j], proxies[i]];
-  }
-  for (const wrap of proxies){
-    try{
-      const url = wrap(base);
-      const res = await fetch(url, { cache:"no-store" });
-      if (!res.ok) continue;
-      let data;
-      const ct = res.headers.get("content-type") || "";
-      if (ct.includes("application/json")) data = await res.json();
-      else data = JSON.parse(await res.text());
-      const items = data?.quoteResponse?.result ?? [];
-      if (!Array.isArray(items)) continue;
-      return items.map(it=>({
-        symbol: it.symbol,
-        price: Number.isFinite(it.regularMarketPrice)? it.regularMarketPrice : null,
-        changePercent: Number.isFinite(it.regularMarketChangePercent)? it.regularMarketChangePercent : null,
-        prevClose: Number.isFinite(it.regularMarketPreviousClose)? it.regularMarketPreviousClose : null,
-        time: it.regularMarketTime? new Date(it.regularMarketTime*1000).toISOString() : null,
-        source:"Yahoo"
-      }));
-    }catch(e){ /* try next proxy */ }
-  }
-  throw new Error("All Yahoo proxies failed for chunk");
-}
-
-async function fetchYahooAll(symbols){
-  const CHUNK = 20; // smaller chunks → fewer proxy failures
-  let out = [];
-  for (let i=0;i<symbols.length;i+=CHUNK){
-    const part = await fetchYahooChunk(symbols.slice(i,i+CHUNK));
-    out = out.concat(part);
-    await new Promise(r=>setTimeout(r, 200));
-  }
-  return out;
-}
-
-/* ---------------- BUILD & RENDER ---------------- */
+/* ====== BUILD & RENDER ====== */
 function buildData(){
   const catOf = (sym)=>{
     for (const [c,list] of Object.entries(CATEGORY_MAP)) if (list.includes(sym)) return c;
@@ -413,7 +337,7 @@ function renderTable(){
   });
 }
 
-/* ---------------- CSV ---------------- */
+/* ====== CSV ====== */
 function toCSV(rows){
   const header=["Ticker","Price","DailyReturn(%)","Yield","Expense","Assets","Frequency","Strategy","Risk","Category"];
   const esc=s=>`"${String(s??"").replace(/"/g,'""')}"`;
@@ -431,35 +355,32 @@ function downloadCSV(){
   a.href=url; a.download="etf_watchlist.csv"; a.click(); URL.revokeObjectURL(url);
 }
 
-/* ---------------- MAIN LOAD ---------------- */
+/* ====== MAIN ====== */
 async function load(){
   const btn=document.getElementById("refreshBtn");
   const status=document.getElementById("status");
   const last=document.getElementById("lastUpdated");
   btn.disabled=true; status.className="status ok"; status.textContent="⏳ Updating…";
 
-  const fhKey = (localStorage.getItem('FINNHUB_KEY')||'').trim();
+  // use embedded key (works out-of-the-box). If user saved their own in this browser, prefer that:
+  const browserKey = (localStorage.getItem('FINNHUB_KEY')||'').trim();
+  const keyToUse = browserKey || DEFAULT_FINNHUB_KEY;
 
   try{
-    if (fhKey){
-      sourceNote.textContent = "Auto-refresh every 60s • Source: Finnhub (API key in your browser)";
-      rowsRaw = await fetchFinnhubAll(TICKERS, fhKey);
-    } else {
-      sourceNote.textContent = "Auto-refresh every 60s • Source: Yahoo via multi-proxy (no key)";
-      rowsRaw = await fetchYahooAll(TICKERS);
-    }
+    rowsRaw = await fetchFinnhubAll(TICKERS, keyToUse);
     if(!rowsRaw.length) throw new Error("No data received");
     buildData(); renderSummary(); renderMovers(); renderTable();
-    status.className="status ok"; status.textContent="✅ Live";
+    status.className="status ok"; status.textContent="✅ Live (Finnhub)";
     last.textContent="Last updated: "+new Date().toLocaleString();
+    document.getElementById("sourceNote").textContent = "Auto-refresh every 60s • Source: Finnhub";
   }catch(err){
     console.error(err);
     status.className="status err";
-    status.textContent="❌ Data error — proxies or API may be limited. Try Refresh.";
+    status.textContent="❌ Data error. Check key or Refresh.";
   }finally{ btn.disabled=false; }
 }
 
-/* ---------------- UI HOOKS ---------------- */
+/* ====== UI HOOKS ====== */
 document.getElementById("refreshBtn").addEventListener("click", load);
 document.getElementById("csvBtn").addEventListener("click", downloadCSV);
 document.querySelectorAll(".pill").forEach(p=>{
