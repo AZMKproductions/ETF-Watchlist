@@ -3,108 +3,169 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>ETF Watchlist | Real-Time Market Data</title>
+<title>ETF Watchlist — Professional Dashboard</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--primary-bg:#0f1419;--secondary-bg:#1a1f2e;--card-bg:#242b3d;--accent-color:#00d4ff;--success-color:#00c896;--danger-color:#ff4757;--warning-color:#ffa502;--text-primary:#ffffff;--text-secondary:#8892b0;--border-color:#2d3748;--shadow:0 10px 25px rgba(0,0,0,.3)}
-body{font-family:Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(135deg,var(--primary-bg) 0%,#1a1f2e 100%);color:var(--text-primary);min-height:100vh;line-height:1.6}
-.container{max-width:1600px;margin:0 auto;padding:20px}
-.header{background:var(--card-bg);border-radius:16px;padding:30px 40px;margin-bottom:30px;border:1px solid var(--border-color);box-shadow:var(--shadow)}
-.header-content{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
-.header-left h1{font-size:2.2rem;font-weight:700;margin-bottom:8px;background:linear-gradient(135deg,var(--accent-color),#64ffda);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.subtitle{color:var(--text-secondary);font-size:1.05rem}
-.last-updated{color:var(--text-secondary);font-size:.9rem}
-.refresh-btn{background:linear-gradient(135deg,var(--accent-color),#0ea5e9);color:#fff;border:none;padding:12px 24px;border-radius:12px;cursor:pointer;font-weight:600;font-size:.95rem;transition:.3s;box-shadow:0 4px 15px rgba(0,212,255,.3)}
-.refresh-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,212,255,.4)}
-.refresh-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-bottom:30px}
-.stat-card{background:var(--card-bg);border:1px solid var(--border-color);border-radius:12px;padding:20px;text-align:center}
-.stat-value{font-size:1.6rem;font-weight:700;margin-bottom:5px}
-.stat-label{color:var(--text-secondary);font-size:.9rem}
-.loading{display:flex;justify-content:center;align-items:center;padding:28px;font-size:1.05rem;color:var(--text-secondary)}
-.loader{border:3px solid var(--border-color);border-top:3px solid var(--accent-color);border-radius:50%;width:26px;height:26px;animation:spin 1s linear infinite;margin-right:12px}
-@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
-.table-container{background:var(--card-bg);border-radius:16px;border:1px solid var(--border-color);box-shadow:var(--shadow);overflow:hidden}
-.table-header{padding:16px 22px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center}
-.table-title{font-size:1.1rem;font-weight:600}
-.data-status{display:flex;align-items:center;gap:8px;font-size:.85rem;padding:6px 12px;border-radius:8px}
-.status-real{background:rgba(39,174,96,.2);color:#2ecc71}
-.status-error{background:rgba(255,71,87,.2);color:#ff4757}
-.status-demo{background:rgba(255,165,2,.2);color:#ffa502}
-.etf-table{width:100%;border-collapse:collapse}
-.etf-table thead{background:var(--secondary-bg)}
-.etf-table th{padding:14px 12px;text-align:left;font-weight:600;font-size:.8rem;text-transform:uppercase;letter-spacing:.8px;color:var(--text-secondary);border-bottom:2px solid var(--border-color);cursor:pointer;user-select:none;transition:background .2s}
-.etf-table th:hover{background:rgba(0,212,255,.1)}
-.etf-table tbody tr{transition:.2s;border-bottom:1px solid var(--border-color)}
-.etf-table tbody tr:hover{background:rgba(0,212,255,.05)}
-.etf-table td{padding:12px;vertical-align:middle;font-size:.92rem;border-bottom:1px solid rgba(45,55,72,.5)}
-.ticker{font-weight:700;font-size:1rem;color:var(--accent-color)}
-.price{font-weight:600;font-size:1rem;color:var(--text-primary);font-family:JetBrains Mono,monospace}
-.daily-return{font-weight:700;padding:6px 10px;border-radius:8px;text-align:center;min-width:84px;font-family:JetBrains Mono,monospace;font-size:.9rem}
-.positive{background:linear-gradient(135deg,var(--success-color),#2dd4bf);color:#fff}
-.negative{background:linear-gradient(135deg,var(--danger-color),#ef4444);color:#fff}
-.neutral{background:linear-gradient(135deg,#6b7280,#9ca3af);color:#fff}
-.badge{padding:4px 8px;border-radius:6px;font-size:.8rem;font-weight:600;display:inline-block}
-.badge-yield{background:rgba(100,255,218,.2);color:#64ffda}
-.badge-exp{background:rgba(255,165,2,.2);color:#ffa502}
-.data-source{font-size:.7rem;color:var(--text-secondary);margin-top:4px}
-@media (max-width:860px){.container{padding:14px}.header-content{flex-direction:column;text-align:center}.header-left h1{font-size:1.8rem}}
+/* --------- THEME --------- */
+:root{
+  --bg:#0e1117;--bg2:#111827;--card:#171d2a;--muted:#8892b0;--text:#e5e7eb;
+  --border:#243041;--accent:#22d3ee;--accent2:#60a5fa;--good:#2dd4bf;--bad:#ef4444;--warn:#f59e0b;
+  --shadow: 0 12px 30px rgba(0,0,0,.35)
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:linear-gradient(145deg,#0c0f15 0%,#111827 100%);color:var(--text);font:14px/1.55 Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.container{max-width:1200px;margin:0 auto;padding:22px}
+
+/* --------- HEADER --------- */
+.header{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:18px}
+.brand h1{margin:0;font-weight:800;font-size:1.8rem;background:linear-gradient(135deg,var(--accent),#34d399);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.brand small{color:var(--muted)}
+.header-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+button, .chip{border:none;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#06121a;
+  font-weight:700;padding:10px 14px;border-radius:10px;box-shadow:0 4px 14px rgba(34,211,238,.25);transition:.2s}
+button:hover{transform:translateY(-1px)}
+button.secondary{background:#0f1624;color:var(--text);border:1px solid var(--border);box-shadow:none}
+.btn-danger{background:linear-gradient(135deg,#ef4444,#fb7185);color:#1a0b0b}
+#search{padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:#0f1624;color:var(--text);min-width:210px}
+
+/* --------- ROWS: SUMMARY + FILTERS --------- */
+.grid{display:grid;gap:16px}
+.grid.cards{grid-template-columns:repeat(5,minmax(0,1fr));margin-bottom:10px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
+.card .label{color:var(--muted);font-size:.8rem}
+.card .value{font-weight:800;font-size:1.4rem;margin-top:6px}
+.card.good .value{color:var(--good)} .card.bad .value{color:var(--bad)}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#0f1624;border:1px solid var(--border);color:var(--muted);font-weight:600}
+
+/* --------- FILTER CHIPS --------- */
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 18px}
+.chip{background:#0f1624;color:var(--text);border:1px solid var(--border);box-shadow:none;font-weight:700}
+.chip.active{background:linear-gradient(135deg,#0ea5e9,#22d3ee);color:#041018}
+
+/* --------- PANELS (TOP G/L) --------- */
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:6px 0 18px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow)}
+.panel h3{margin:0 0 10px;font-size:1rem;color:#dbeafe}
+.mini-list{display:grid;gap:10px}
+.item{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);padding:8px 10px;border-radius:10px;background:#0f1624}
+.item .sym{font-weight:800;color:#93c5fd}
+.item .pct{font-family:JetBrains Mono,ui-monospace,monospace;padding:4px 8px;border-radius:7px}
+.item .pct.pos{background:rgba(45,212,191,.18);color:var(--good)}
+.item .pct.neg{background:rgba(239,68,68,.18);color:var(--bad)}
+
+/* --------- TABLE --------- */
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.table-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border);background:#0f1624}
+.table-head h2{margin:0;font-size:1rem}
+.status{padding:6px 10px;border-radius:9px;background:rgba(34,211,238,.15);color:#67e8f9;font-weight:700}
+.table{width:100%;border-collapse:collapse}
+th,td{padding:12px 10px;border-bottom:1px solid rgba(36,48,65,.6)}
+thead th{position:sticky;top:0;background:#0f1624;color:#9fb3c8;text-transform:uppercase;font-size:.75rem;letter-spacing:.7px;text-align:left;cursor:pointer}
+tbody tr:hover{background:#0f1624}
+.ticker{font-weight:800;color:#7dd3fc}
+.price{font-weight:700;font-family:JetBrains Mono,ui-monospace}
+.pill{display:inline-block;padding:4px 8px;border-radius:7px;font-weight:700;font-size:.85rem}
+.pill.ret.pos{background:rgba(45,212,191,.18);color:var(--good)}
+.pill.ret.neg{background:rgba(239,68,68,.18);color:var(--bad)}
+.pill.meta{background:rgba(148,163,184,.15);color:#cbd5e1;border:1px solid rgba(148,163,184,.25)}
+.risk{font-weight:800}
+
+/* --------- LOADING / FOOT --------- */
+.loading{display:none;justify-content:center;align-items:center;gap:10px;padding:14px;color:var(--muted)}
+.loader{width:18px;height:18px;border-radius:50%;border:3px solid #1f2a3b;border-top-color:#60a5fa;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;color:var(--muted);font-size:.85rem}
+
+/* --------- RESPONSIVE --------- */
+@media (max-width:1040px){.grid.cards{grid-template-columns:repeat(3,1fr)}.panels{grid-template-columns:1fr}}
+@media (max-width:720px){.grid.cards{grid-template-columns:repeat(2,1fr)}.header{flex-direction:column;align-items:flex-start}}
+@media (max-width:520px){.grid.cards{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="container">
+  <!-- Header -->
   <div class="header">
-    <div class="header-content">
-      <div class="header-left">
-        <h1>📊 ETF Watchlist</h1>
-        <div class="subtitle">Live prices & daily returns — auto-refreshes every 60s</div>
-      </div>
-      <div class="header-right">
-        <div class="last-updated" id="lastUpdated">Ready…</div>
-        <button class="refresh-btn" id="refreshBtn">🔄 Refresh</button>
-      </div>
+    <div class="brand">
+      <h1>ETF Watchlist — Pro</h1>
+      <small>Live prices & daily returns • Auto-refresh every 60s</small>
+    </div>
+    <div class="header-tools">
+      <input id="search" type="search" placeholder="Search ticker or strategy…" />
+      <button id="refreshBtn">🔄 Refresh</button>
+      <button id="exportBtn" class="secondary">⬇️ Export CSV</button>
     </div>
   </div>
 
-  <div class="stats-grid" id="statsGrid" style="display:none;">
-    <div class="stat-card"><div class="stat-value" id="totalETFs">-</div><div class="stat-label">Total ETFs</div></div>
-    <div class="stat-card"><div class="stat-value" id="gainers">-</div><div class="stat-label">Gainers</div></div>
-    <div class="stat-card"><div class="stat-value" id="losers">-</div><div class="stat-label">Losers</div></div>
-    <div class="stat-card"><div class="stat-value" id="avgReturn">-</div><div class="stat-label">Avg Return</div></div>
+  <!-- Summary Cards -->
+  <div class="grid cards">
+    <div class="card"><div class="label">Total ETFs</div><div class="value" id="statTotal">-</div></div>
+    <div class="card"><div class="label">Avg Daily Return</div><div class="value" id="statAvg">-</div></div>
+    <div class="card good"><div class="label">Gainers</div><div class="value" id="statGainers">-</div></div>
+    <div class="card bad"><div class="label">Losers</div><div class="value" id="statLosers">-</div></div>
+    <div class="card"><div class="label">Breadth (Gainers %)</div><div class="value" id="statBreadth">-</div></div>
   </div>
 
-  <div id="loading" class="loading" style="display:none;">
-    <div class="loader"></div>Loading market data…
+  <!-- Category Filters -->
+  <div class="filters" id="filters">
+    <button class="chip active" data-filter="all">All</button>
+    <button class="chip" data-filter="High Income">High Income</button>
+    <button class="chip" data-filter="Growth">Growth</button>
+    <button class="chip" data-filter="Bonds">Bonds</button>
+    <button class="chip" data-filter="Dividend">Dividend</button>
+    <button class="chip" data-filter="International">International</button>
+    <button class="chip" data-filter="Small/Mid">Small/Mid</button>
+    <button class="chip" data-filter="Conservative">Conservative</button>
   </div>
 
-  <div class="table-container" id="tableContainer" style="display:none;">
-    <div class="table-header">
-      <div class="table-title">Market Data</div>
-      <div class="data-status status-real" id="dataStatus"><span>✅</span><span>Live (Yahoo via proxy)</span></div>
+  <!-- Top Gainers / Losers Panels -->
+  <div class="panels">
+    <div class="panel">
+      <h3>Top Gainers</h3>
+      <div class="mini-list" id="topGainers"></div>
     </div>
+    <div class="panel">
+      <h3>Top Losers</h3>
+      <div class="mini-list" id="topLosers"></div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <div class="table-head">
+      <h2>Market Data</h2>
+      <div class="status" id="status">✅ Live (Yahoo)</div>
+    </div>
+    <div class="loading" id="loading"><div class="loader"></div><span>Loading quotes…</span></div>
     <div style="overflow-x:auto;">
-      <table class="etf-table">
+      <table class="table">
         <thead>
           <tr>
-            <th data-col="ticker">Ticker</th>
-            <th data-col="price">Price</th>
-            <th data-col="dailyReturn">Daily Return</th>
+            <th data-sort="ticker">Ticker</th>
+            <th data-sort="price">Price</th>
+            <th data-sort="dailyReturn">Daily Return</th>
             <th>Yield</th>
             <th>Expense</th>
             <th>Assets</th>
-            <th>Frequency</th>
-            <th>Strategy</th>
-            <th>Risk</th>
+            <th data-sort="frequency">Frequency</th>
+            <th data-sort="strategy">Strategy</th>
+            <th data-sort="risk">Risk</th>
           </tr>
         </thead>
-        <tbody id="etfTableBody"></tbody>
+        <tbody id="tbody"></tbody>
       </table>
     </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="foot">
+    <div id="lastUpdated">Ready…</div>
+    <div><span class="badge">Auto-refresh: 60s</span></div>
   </div>
 </div>
 
 <script>
-// ====== CONFIG: edit your tickers here ======
+/* ---------------- CONFIG ---------------- */
 const TICKERS = [
   "TLT","IEF","AGG","BND","CGCP","SHY","TLTW","AGGH",
   "SCHD","DVY","DGRO","VTV","FDL","DIVO","FDVV","SPYV","DIVB","DGRW","CGDV","VIG",
@@ -113,216 +174,282 @@ const TICKERS = [
   "VYMI","IDVO","IWM","AVUV","XMMO","XSMO"
 ];
 
-// Static metadata for side columns (optional; cosmetic)
+// Static metadata (edit if you like)
 const META = {
-  TLT:{yield:"3-5%",expense:"0.15%",assets:"$49 B",frequency:"Monthly",strategy:"Fixed Income (Long-term)",risk:"High"},
-  IEF:{yield:"3-4%",expense:"0.15%",assets:"$34 B",frequency:"Monthly",strategy:"Fixed Income (Medium-term)",risk:"Medium/High"},
-  AGG:{yield:"3-4%",expense:"0.03%",assets:"$123 B",frequency:"Monthly",strategy:"Fixed Income (Mix)",risk:"Medium"},
-  BND:{yield:"3-4%",expense:"0.03%",assets:"$353 B",frequency:"Monthly",strategy:"Fixed Income (Mix)",risk:"Medium"},
-  CGCP:{yield:"4-5%",expense:"0.34%",assets:"$5 B",frequency:"Monthly",strategy:"Fixed Income (Mix)",risk:"Medium"},
-  SHY:{yield:"3-4%",expense:"0.15%",assets:"$24 B",frequency:"Monthly",strategy:"Fixed Income (Short/Medium-term)",risk:"Low"},
-  TLTW:{yield:"15-20%",expense:"0.35%",assets:"$1 B",frequency:"Monthly",strategy:"FI + High Income (Long-term)",risk:"Med/High + Income"},
-  AGGH:{yield:"8-10%",expense:"0.29%",assets:"$300 M",frequency:"Monthly",strategy:"FI + High Income (Mix)",risk:"Med + Income"},
-  SCHD:{yield:"3-4%",expense:"0.06%",assets:"$69 B",frequency:"Quarterly",strategy:"Dividend Growth (Value)",risk:"Med/High"},
-  DVY:{yield:"3-4%",expense:"0.38%",assets:"$20 B",frequency:"Quarterly",strategy:"Dividend Growth (Value)",risk:"Med/High"},
-  DGRO:{yield:"2-3%",expense:"0.08%",assets:"$31 B",frequency:"Quarterly",strategy:"Dividend Growth (Blend)",risk:"High"},
-  VTV:{yield:"2-3%",expense:"0.04%",assets:"$181 B",frequency:"Quarterly",strategy:"Dividend Growth (Value)",risk:"Med/High"},
-  FDL:{yield:"4%",expense:"0.45%",assets:"$31 B",frequency:"Quarterly",strategy:"Dividend Growth (Value)",risk:"Med/High"},
-  DIVO:{yield:"4-6%",expense:"0.56%",assets:"$4.4 B",frequency:"Monthly",strategy:"Dividend Growth (Value)",risk:"Med/High"},
-  FDVV:{yield:"2-4%",expense:"0.16%",assets:"$5.2 B",frequency:"Quarterly",strategy:"Dividend Growth (Growth)",risk:"High"},
-  SPYV:{yield:"2%",expense:"0.04%",assets:"$26.2B",frequency:"Quarterly",strategy:"Dividend Growth (Growth)",risk:"High"},
-  DIVB:{yield:"2-3%",expense:"0.05%",assets:"~$1 B",frequency:"Quarterly",strategy:"Dividend Growth (Growth)",risk:"High"},
-  DGRW:{yield:"1.5-2%",expense:"0.29%",assets:"$15 B",frequency:"Monthly",strategy:"Dividend Growth (Growth)",risk:"High"},
-  CGDV:{yield:"1.5-2%",expense:"0.33%",assets:"$16.4 B",frequency:"Quarterly",strategy:"Dividend Growth (Growth)",risk:"High"},
-  VIG:{yield:"1-2%",expense:"0.05%",assets:"$105 B",frequency:"Quarterly",strategy:"Dividend Growth (Growth)",risk:"High"},
-  CGCV:{yield:"1-2%",expense:"0.33%",assets:"$900 M",frequency:"Quarterly",strategy:"Conservative Growth",risk:"Medium"},
-  HELO:{yield:"<1%",expense:"0.50%",assets:"$3 B",frequency:"Quarterly",strategy:"Conservative Growth",risk:"Med/High"},
-  SPY:{yield:"<1.5%",expense:"0.09%",assets:"$600 B",frequency:"Quarterly",strategy:"Growth",risk:"High"},
-  VOO:{yield:"<1.5%",expense:"0.03%",assets:"$1.33 T",frequency:"Quarterly",strategy:"Growth",risk:"High"},
-  QQQ:{yield:"<1%",expense:"0.20%",assets:"$330 B",frequency:"Quarterly",strategy:"Growth",risk:"Very High"},
-  QQQM:{yield:"<1%",expense:"0.15%",assets:"$49 B",frequency:"Quarterly",strategy:"Growth",risk:"Very High"},
-  SCHG:{yield:"<1%",expense:"0.04%",assets:"$41 B",frequency:"Quarterly",strategy:"Growth",risk:"Very High"},
-  GARP:{yield:"<1%",expense:"0.15%",assets:"$430 M",frequency:"Quarterly",strategy:"Growth",risk:"Very High"},
-  SPMO:{yield:"<1%",expense:"0.13%",assets:"$7.5 B",frequency:"Quarterly",strategy:"Growth",risk:"Very High"},
-  SMH:{yield:"<1%",expense:"0.35%",assets:"$22 B",frequency:"Annual",strategy:"Growth",risk:"Very High"},
-  VFLO:{yield:"1-2%",expense:"0.39%",assets:"$4 B",frequency:"Monthly",strategy:"Growth",risk:"Very High"},
-  JQUA:{yield:"1-2%",expense:"0.12%",assets:"$6.2 B",frequency:"Quarterly",strategy:"Growth",risk:"High"},
-  CGGR:{yield:"<1%",expense:"0.39%",assets:"$12.1 B",frequency:"Quarterly",strategy:"Growth",risk:"Very High"},
-  JEPI:{yield:"7-10%",expense:"0.35%",assets:"$40 B",frequency:"Monthly",strategy:"Value + High Income",risk:"Med + Income"},
-  JEPQ:{yield:"9-12%",expense:"0.35%",assets:"$25 B",frequency:"Monthly",strategy:"Growth + High Income",risk:"High + Income"},
-  GPIQ:{yield:"8-11%",expense:"0.29%",assets:"$800 M",frequency:"Monthly",strategy:"Growth + High Income",risk:"High + Income"},
-  QQQI:{yield:"12-15%",expense:"0.68%",assets:"$1.6 B",frequency:"Monthly",strategy:"Growth + High Income",risk:"High + Income"},
-  GPIX:{yield:"7-10%",expense:"0.29%",assets:"$800 M",frequency:"Monthly",strategy:"Growth + High Income",risk:"Med/High + Income"},
-  SPYI:{yield:"11-13%",expense:"0.68%",assets:"$3.5 B",frequency:"Monthly",strategy:"Growth + High Income",risk:"Med/High + Income"},
-  QDVO:{yield:"9-12%",expense:"0.55%",assets:"$50 M",frequency:"Monthly",strategy:"Growth + High Income",risk:"High + Income"},
-  RSPA:{yield:"9-10%",expense:"0.29%",assets:"$430 M",frequency:"Monthly",strategy:"Balanced Growth + High Income",risk:"High + Income"},
-  IWMI:{yield:"14-15%",expense:"0.68%",assets:"$250 M",frequency:"Monthly",strategy:"Growth + High Income",risk:"Very High + Income"},
-  BALI:{yield:"8-10%",expense:"0.35%",assets:"$330 M",frequency:"Monthly",strategy:"Growth + High Income",risk:"High + Income"},
-  VYMI:{yield:"3-4%",expense:"0.17%",assets:"$10.2 B",frequency:"Quarterly",strategy:"International Dividend Growth",risk:"Med/High"},
-  IDVO:{yield:"4-6%",expense:"0.66%",assets:"$260 M",frequency:"Monthly",strategy:"Intl Div Growth/High Income",risk:"Med/High + Income"},
-  IWM:{yield:"<1%",expense:"0.19%",assets:"$63 B",frequency:"Quarterly",strategy:"Small Cap Growth",risk:"Very High"},
-  AVUV:{yield:"1-2%",expense:"0.25%",assets:"$15.6 B",frequency:"Quarterly",strategy:"Small Cap Growth",risk:"Very High"},
-  XMMO:{yield:"<1%",expense:"0.34%",assets:"$3.8 B",frequency:"Quarterly",strategy:"Mid Cap Growth",risk:"Very High"},
-  XSMO:{yield:"<1%",expense:"0.39%",assets:"$1.5 B",frequency:"Quarterly",strategy:"Small Cap Growth",risk:"Very High"}
+  TLT:{yield:"3-5%",expense:"0.15%",assets:"$49 B",frequency:"Monthly",strategy:"Bonds • Long Duration",risk:"High"},
+  IEF:{yield:"3-4%",expense:"0.15%",assets:"$34 B",frequency:"Monthly",strategy:"Bonds • Intermediate",risk:"Med/High"},
+  AGG:{yield:"3-4%",expense:"0.03%",assets:"$123 B",frequency:"Monthly",strategy:"Bonds • Aggregate",risk:"Medium"},
+  BND:{yield:"3-4%",expense:"0.03%",assets:"$353 B",frequency:"Monthly",strategy:"Bonds • Aggregate",risk:"Medium"},
+  CGCP:{yield:"4-5%",expense:"0.34%",assets:"$5 B",frequency:"Monthly",strategy:"Bonds • Hybrid",risk:"Medium"},
+  SHY:{yield:"3-4%",expense:"0.15%",assets:"$24 B",frequency:"Monthly",strategy:"Bonds • Short/Int",risk:"Low"},
+  TLTW:{yield:"15-20%",expense:"0.35%",assets:"$1 B",frequency:"Monthly",strategy:"High Income • Bond Overlay",risk:"Med/High + Inc"},
+  AGGH:{yield:"8-10%",expense:"0.29%",assets:"$300 M",frequency:"Monthly",strategy:"High Income • Multi-Asset",risk:"Med + Inc"},
+  SCHD:{yield:"3-4%",expense:"0.06%",assets:"$69 B",frequency:"Quarterly",strategy:"Dividend • Growth/Value",risk:"Med/High"},
+  DVY:{yield:"3-4%",expense:"0.38%",assets:"$20 B",frequency:"Quarterly",strategy:"Dividend • Value",risk:"Med/High"},
+  DGRO:{yield:"2-3%",expense:"0.08%",assets:"$31 B",frequency:"Quarterly",strategy:"Dividend • Growth",risk:"High"},
+  VTV:{yield:"2-3%",expense:"0.04%",assets:"$181 B",frequency:"Quarterly",strategy:"Dividend • Value",risk:"Med/High"},
+  FDL:{yield:"~4%",expense:"0.45%",assets:"$31 B",frequency:"Quarterly",strategy:"Dividend • Value",risk:"Med/High"},
+  DIVO:{yield:"4-6%",expense:"0.56%",assets:"$4.4 B",frequency:"Monthly",strategy:"Dividend • Active/Income",risk:"Med/High"},
+  FDVV:{yield:"2-4%",expense:"0.16%",assets:"$5.2 B",frequency:"Quarterly",strategy:"Dividend • Growth",risk:"High"},
+  SPYV:{yield:"~2%",expense:"0.04%",assets:"$26.2B",frequency:"Quarterly",strategy:"Dividend • Growth",risk:"High"},
+  DIVB:{yield:"2-3%",expense:"0.05%",assets:"~$1 B",frequency:"Quarterly",strategy:"Dividend • Growth",risk:"High"},
+  DGRW:{yield:"1.5-2%",expense:"0.29%",assets:"$15 B",frequency:"Monthly",strategy:"Dividend • Growth",risk:"High"},
+  CGDV:{yield:"1.5-2%",expense:"0.33%",assets:"$16.4 B",frequency:"Quarterly",strategy:"Growth • Active",risk:"High"},
+  VIG:{yield:"1-2%",expense:"0.05%",assets:"$105 B",frequency:"Quarterly",strategy:"Dividend • Growth",risk:"High"},
+  CGCV:{yield:"1-2%",expense:"0.33%",assets:"$900 M",frequency:"Quarterly",strategy:"Conservative • Active",risk:"Medium"},
+  HELO:{yield:"<1%",expense:"0.50%",assets:"$3 B",frequency:"Quarterly",strategy:"Conservative • Overlay",risk:"Med/High"},
+  SPY:{yield:"<1.5%",expense:"0.09%",assets:"$600 B",frequency:"Quarterly",strategy:"Growth • S&P 500",risk:"High"},
+  VOO:{yield:"<1.5%",expense:"0.03%",assets:"$1.33 T",frequency:"Quarterly",strategy:"Growth • S&P 500",risk:"High"},
+  QQQ:{yield:"<1%",expense:"0.20%",assets:"$330 B",frequency:"Quarterly",strategy:"Growth • Nasdaq 100",risk:"Very High"},
+  QQQM:{yield:"<1%",expense:"0.15%",assets:"$49 B",frequency:"Quarterly",strategy:"Growth • Nasdaq 100",risk:"Very High"},
+  SCHG:{yield:"<1%",expense:"0.04%",assets:"$41 B",frequency:"Quarterly",strategy:"Growth • Large Cap",risk:"Very High"},
+  GARP:{yield:"<1%",expense:"0.15%",assets:"$430 M",frequency:"Quarterly",strategy:"Growth • Factor (GARP)",risk:"Very High"},
+  SPMO:{yield:"<1%",expense:"0.13%",assets:"$7.5 B",frequency:"Quarterly",strategy:"Growth • Momentum",risk:"Very High"},
+  SMH:{yield:"<1%",expense:"0.35%",assets:"$22 B",frequency:"Annual",strategy:"Growth • Semis",risk:"Very High"},
+  VFLO:{yield:"1-2%",expense:"0.39%",assets:"$4 B",frequency:"Monthly",strategy:"Growth • Quality",risk:"Very High"},
+  JQUA:{yield:"1-2%",expense:"0.12%",assets:"$6.2 B",frequency:"Quarterly",strategy:"Growth • Quality",risk:"High"},
+  CGGR:{yield:"<1%",expense:"0.39%",assets:"$12.1 B",frequency:"Quarterly",strategy:"Growth • Active",risk:"Very High"},
+  JEPI:{yield:"7-10%",expense:"0.35%",assets:"$40 B",frequency:"Monthly",strategy:"High Income • Value CC",risk:"Med + Inc"},
+  JEPQ:{yield:"9-12%",expense:"0.35%",assets:"$25 B",frequency:"Monthly",strategy:"High Income • Nasdaq CC",risk:"High + Inc"},
+  GPIQ:{yield:"8-11%",expense:"0.29%",assets:"$800 M",frequency:"Monthly",strategy:"High Income • Nasdaq CC",risk:"High + Inc"},
+  QQQI:{yield:"12-15%",expense:"0.68%",assets:"$1.6 B",frequency:"Monthly",strategy:"High Income • Nasdaq CC",risk:"High + Inc"},
+  GPIX:{yield:"7-10%",expense:"0.29%",assets:"$800 M",frequency:"Monthly",strategy:"High Income • S&P CC",risk:"Med/High + Inc"},
+  SPYI:{yield:"11-13%",expense:"0.68%",assets:"$3.5 B",frequency:"Monthly",strategy:"High Income • S&P CC",risk:"Med/High + Inc"},
+  QDVO:{yield:"9-12%",expense:"0.55%",assets:"$50 M",frequency:"Monthly",strategy:"High Income • Dividend",risk:"High + Inc"},
+  RSPA:{yield:"9-10%",expense:"0.29%",assets:"$430 M",frequency:"Monthly",strategy:"High Income • Balanced",risk:"High + Inc"},
+  IWMI:{yield:"14-15%",expense:"0.68%",assets:"$250 M",frequency:"Monthly",strategy:"High Income • Small Cap CC",risk:"Very High + Inc"},
+  BALI:{yield:"8-10%",expense:"0.35%",assets:"$330 M",frequency:"Monthly",strategy:"High Income • Balanced",risk:"High + Inc"},
+  VYMI:{yield:"3-4%",expense:"0.17%",assets:"$10.2 B",frequency:"Quarterly",strategy:"International • Dividend",risk:"Med/High"},
+  IDVO:{yield:"4-6%",expense:"0.66%",assets:"$260 M",frequency:"Monthly",strategy:"International • Dividend/CC",risk:"Med/High + Inc"},
+  IWM:{yield:"<1%",expense:"0.19%",assets:"$63 B",frequency:"Quarterly",strategy:"Small/Mid • Small Cap",risk:"Very High"},
+  AVUV:{yield:"1-2%",expense:"0.25%",assets:"$15.6 B",frequency:"Quarterly",strategy:"Small/Mid • Small Value",risk:"Very High"},
+  XMMO:{yield:"<1%",expense:"0.34%",assets:"$3.8 B",frequency:"Quarterly",strategy:"Small/Mid • Mid Momentum",risk:"Very High"},
+  XSMO:{yield:"<1%",expense:"0.39%",assets:"$1.5 B",frequency:"Quarterly",strategy:"Small/Mid • Small Momentum",risk:"Very High"}
 };
 
-let etfData = [];
-let sortDir = -1; // toggle sort direction
-
-function classForReturn(pct){
-  if (!isFinite(pct)) return "neutral";
-  if (pct > 0) return "positive";
-  if (pct < 0) return "negative";
-  return "neutral";
-}
-
-// ---- Fetch quotes via Yahoo Finance using a public CORS relay (no API key) ----
-// Endpoint: https://query1.finance.yahoo.com/v7/finance/quote?symbols=SPY,QQQ
-// Relay: https://api.allorigins.win/raw?url=<encoded_target_url>
-async function fetchQuotesYahoo(symbols){
-  const yahooURL = "https://query1.finance.yahoo.com/v7/finance/quote?symbols=" + encodeURIComponent(symbols.join(","));
-  const proxied = "https://api.allorigins.win/raw?url=" + encodeURIComponent(yahooURL);
-  const res = await fetch(proxied, { cache: "no-store" });
-  if (!res.ok) throw new Error("Quote fetch failed: " + res.status);
-  const json = await res.json();
-  const items = json && json.quoteResponse && Array.isArray(json.quoteResponse.result)
-    ? json.quoteResponse.result : [];
-  return items.map(it => ({
-    symbol: it.symbol,
-    price: (typeof it.regularMarketPrice === "number") ? it.regularMarketPrice : null,
-    change: (typeof it.regularMarketChange === "number") ? it.regularMarketChange : null,
-    changePercent: (typeof it.regularMarketChangePercent === "number") ? it.regularMarketChangePercent : null,
-    prevClose: (typeof it.regularMarketPreviousClose === "number") ? it.regularMarketPreviousClose : null,
-    time: it.regularMarketTime ? new Date(it.regularMarketTime * 1000).toISOString() : null,
-    source: "Yahoo"
+/* ---------------- DATA FETCH ---------------- */
+// Yahoo Finance (no key) via public CORS relay
+async function fetchYahooQuotes(symbols){
+  const target = "https://query1.finance.yahoo.com/v7/finance/quote?symbols=" + encodeURIComponent(symbols.join(","));
+  const url = "https://api.allorigins.win/raw?url=" + encodeURIComponent(target);
+  const res = await fetch(url, {cache:"no-store"});
+  if(!res.ok) throw new Error("Yahoo fetch failed: " + res.status);
+  const j = await res.json();
+  const list = j?.quoteResponse?.result ?? [];
+  return list.map(q => ({
+    symbol: q.symbol,
+    price: isFinite(q.regularMarketPrice) ? q.regularMarketPrice : null,
+    dailyReturn: isFinite(q.regularMarketChangePercent) ? q.regularMarketChangePercent : null,
+    time: q.regularMarketTime ? new Date(q.regularMarketTime*1000).toISOString() : null
   }));
 }
 
-async function load(){
-  const loading = document.getElementById('loading');
-  const table = document.getElementById('tableContainer');
-  const stats = document.getElementById('statsGrid');
-  const btn = document.getElementById('refreshBtn');
-  const last = document.getElementById('lastUpdated');
-  const status = document.getElementById('dataStatus');
-
-  btn.disabled = true;
-  loading.style.display = 'flex';
-  table.style.display = 'none';
-  stats.style.display = 'none';
-  status.className = 'data-status status-real';
-  status.innerHTML = '<span>✅</span><span>Live (Yahoo via proxy)</span>';
-
-  try{
-    // Yahoo supports up to ~50 symbols per call; chunk if needed
-    const CHUNK = 45;
-    let rows = [];
-    for (let i = 0; i < TICKERS.length; i += CHUNK) {
-      const slice = TICKERS.slice(i, i + CHUNK);
-      const part = await fetchQuotesYahoo(slice);
-      rows = rows.concat(part);
-      // small delay to be nice
-      await new Promise(r => setTimeout(r, 250));
-    }
-
-    // Merge with META
-    etfData = rows.map(r => {
-      const meta = META[r.symbol] || {};
-      return {
-        ticker: r.symbol,
-        price: Number.isFinite(r.price) ? r.price : null,
-        dailyReturn: Number.isFinite(r.changePercent) ? r.changePercent : null,
-        yield: meta.yield || "—",
-        expense: meta.expense || "—",
-        assets: meta.assets || "—",
-        frequency: meta.frequency || "—",
-        strategy: meta.strategy || "—",
-        risk: meta.risk || "—",
-        source: r.source || "API"
-      };
-    });
-
-    render();
-    updateStats();
-    last.textContent = `Last updated: ${new Date().toLocaleString()}`;
-    table.style.display = 'block';
-    stats.style.display = 'grid';
-  } catch(e){
-    console.error(e);
-    status.className = 'data-status status-error';
-    status.innerHTML = '<span>❌</span><span>Data Error</span>';
-  } finally {
-    loading.style.display = 'none';
-    btn.disabled = false;
+async function loadAll(){
+  toggleLoading(true);
+  const CHUNK=45; let out=[];
+  for(let i=0;i<TICKERS.length;i+=CHUNK){
+    const slice=TICKERS.slice(i,i+CHUNK);
+    const part=await fetchYahooQuotes(slice);
+    out=out.concat(part);
+    await new Promise(r=>setTimeout(r,200));
   }
+  dataRaw = out;
+  computeRows();
+  renderAll();
+  toggleLoading(false);
 }
 
-function render(){
-  const tb = document.getElementById('etfTableBody');
-  tb.innerHTML = '';
-  etfData.forEach(etf => {
-    const pct = etf.dailyReturn;
-    const cls = classForReturn(pct);
-    const sign = (pct > 0 ? '+' : '');
-    const priceStr = etf.price != null ? etf.price.toFixed(2) : '-';
-    const pctStr = isFinite(pct) ? `${sign}${pct.toFixed(2)}%` : '—';
+/* ---------------- TRANSFORM & STATE ---------------- */
+let dataRaw=[];       // from Yahoo
+let rows=[];          // merged with META, filtered & searched
+let sortKey="ticker"; // default sort
+let sortDir=-1;       // -1 desc, 1 asc
+let activeFilter="all";
+let searchTerm="";
+
+function bucketFromStrategy(strategy=""){
+  const s = strategy.toLowerCase();
+  if (s.includes("high income")) return "High Income";
+  if (s.includes("bonds") || s.includes("bond")) return "Bonds";
+  if (s.includes("dividend")) return "Dividend";
+  if (s.includes("international") || s.includes("intl")) return "International";
+  if (s.includes("small/mid") || s.includes("small") || s.includes("mid")) return "Small/Mid";
+  if (s.includes("conservative")) return "Conservative";
+  return "Growth"; // default bucket
+}
+
+function computeRows(){
+  rows = TICKERS.map(sym=>{
+    const quote = dataRaw.find(d=>d.symbol===sym) || {};
+    const meta  = META[sym] || {};
+    const daily = isFinite(quote.dailyReturn)? quote.dailyReturn : null;
+    return {
+      ticker: sym,
+      price: isFinite(quote.price)? quote.price : null,
+      dailyReturn: daily,
+      yield: meta.yield || "—",
+      expense: meta.expense || "—",
+      assets: meta.assets || "—",
+      frequency: meta.frequency || "—",
+      strategy: meta.strategy || "—",
+      risk: meta.risk || "—",
+      bucket: bucketFromStrategy(meta.strategy || "")
+    };
+  });
+}
+
+/* ---------------- RENDER ---------------- */
+function toggleLoading(v){
+  document.getElementById("loading").style.display = v ? "flex" : "none";
+  document.getElementById("refreshBtn").disabled = v;
+}
+
+function fmtPct(x){ return isFinite(x) ? (x>0?"+":"") + x.toFixed(2)+"%" : "—"; }
+function fmtPrice(x){ return isFinite(x) ? x.toFixed(2) : "—"; }
+
+function renderSummary(current){
+  const total = current.length;
+  const gainers = current.filter(r=>r.dailyReturn>0).length;
+  const losers = current.filter(r=>r.dailyReturn<0).length;
+  const avg = current.reduce((s,r)=>s+(isFinite(r.dailyReturn)?r.dailyReturn:0),0) / (total||1);
+  document.getElementById("statTotal").textContent = total;
+  document.getElementById("statGainers").textContent = gainers;
+  document.getElementById("statLosers").textContent = losers;
+  document.getElementById("statAvg").textContent = isFinite(avg)? avg.toFixed(2)+"%":"—";
+  const breadth = total? (gainers/total*100):0;
+  document.getElementById("statBreadth").textContent = isFinite(breadth)? breadth.toFixed(0)+"%":"—";
+  document.getElementById("lastUpdated").textContent = "Last updated: " + new Date().toLocaleString();
+}
+
+function renderTopLists(current){
+  const withRet=current.filter(r=>isFinite(r.dailyReturn));
+  const tg = [...withRet].sort((a,b)=>b.dailyReturn-a.dailyReturn).slice(0,5);
+  const tl = [...withRet].sort((a,b)=>a.dailyReturn-b.dailyReturn).slice(0,5);
+  const gEl = document.getElementById("topGainers");
+  const lEl = document.getElementById("topLosers");
+  gEl.innerHTML = tg.map(r=>(
+    `<div class="item"><div class="sym">${r.ticker}</div><div class="pct pos">+${r.dailyReturn.toFixed(2)}%</div></div>`
+  )).join("") || `<div class="item"><div class="sym">—</div><div class="pct">—</div></div>`;
+  lEl.innerHTML = tl.map(r=>(
+    `<div class="item"><div class="sym">${r.ticker}</div><div class="pct neg">${r.dailyReturn.toFixed(2)}%</div></div>`
+  )).join("") || `<div class="item"><div class="sym">—</div><div class="pct">—</div></div>`;
+}
+
+function renderTable(current){
+  const tb = document.getElementById("tbody");
+  tb.innerHTML = current.map(r=>{
+    const cls = isFinite(r.dailyReturn) ? (r.dailyReturn>0?"pos":"neg") : "";
+    const retPill = `<span class="pill ret ${cls}">${fmtPct(r.dailyReturn)}</span>`;
     const riskColor =
-      /Very High/.test(etf.risk) ? '#ff4757' :
-      /High/.test(etf.risk) ? '#ffa502' :
-      /Medium/.test(etf.risk) ? '#3742fa' :
-      /Low/.test(etf.risk) ? '#2ed573' : '#9ca3af';
+      /Very High/i.test(r.risk) ? "#ef4444" :
+      /High/i.test(r.risk) ? "#f59e0b" :
+      /Medium/i.test(r.risk) ? "#60a5fa" :
+      /Low/i.test(r.risk) ? "#2dd4bf" : "#cbd5e1";
+    return `<tr>
+      <td class="ticker">${r.ticker}</td>
+      <td class="price">${fmtPrice(r.price)}</td>
+      <td>${retPill}</td>
+      <td><span class="pill meta">${r.yield}</span></td>
+      <td><span class="pill meta">${r.expense}</span></td>
+      <td>${r.assets}</td>
+      <td>${r.frequency}</td>
+      <td>${r.strategy}</td>
+      <td class="risk" style="color:${riskColor}">${r.risk}</td>
+    </tr>`;
+  }).join("");
+}
 
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td><div class="ticker">${etf.ticker}</div></td>
-      <td><div class="price">${priceStr}</div></td>
-      <td>
-        <div class="daily-return ${cls}">${pctStr}</div>
-        <div class="data-source">Yahoo</div>
-      </td>
-      <td><span class="badge badge-yield">${etf.yield}</span></td>
-      <td><span class="badge badge-exp">${etf.expense}</span></td>
-      <td>${etf.assets}</td>
-      <td>${etf.frequency}</td>
-      <td>${etf.strategy}</td>
-      <td><span style="color:${riskColor}; font-weight:600;">${etf.risk}</span></td>
-    `;
-    tb.appendChild(tr);
+function applyFilterSearchSort(){
+  let current = rows;
+
+  // filter by chip
+  if (activeFilter!=="all"){
+    if (activeFilter==="Bonds"){
+      current = current.filter(r=>r.bucket==="Bonds");
+    } else if (activeFilter==="Dividend"){
+      current = current.filter(r=>/Dividend/i.test(r.strategy));
+    } else if (activeFilter==="High Income"){
+      current = current.filter(r=>r.bucket==="High Income");
+    } else if (activeFilter==="International"){
+      current = current.filter(r=>r.bucket==="International");
+    } else if (activeFilter==="Small/Mid"){
+      current = current.filter(r=>r.bucket==="Small/Mid");
+    } else if (activeFilter==="Conservative"){
+      current = current.filter(r=>r.bucket==="Conservative");
+    } else if (activeFilter==="Growth"){
+      current = current.filter(r=>r.bucket==="Growth");
+    }
+  }
+
+  // search
+  if (searchTerm){
+    const q = searchTerm.toLowerCase();
+    current = current.filter(r =>
+      r.ticker.toLowerCase().includes(q) ||
+      (r.strategy||"").toLowerCase().includes(q) ||
+      (r.risk||"").toLowerCase().includes(q)
+    );
+  }
+
+  // sort
+  current.sort((a,b)=>{
+    const av=a[sortKey], bv=b[sortKey];
+    if (typeof av==="number" && typeof bv==="number"){
+      return sortDir===-1 ? bv-av : av-bv;
+    }
+    return String(av??"").localeCompare(String(bv??"")) * (sortDir===-1 ? -1 : 1);
   });
+
+  renderSummary(current);
+  renderTopLists(current);
+  renderTable(current);
 }
 
-function updateStats(){
-  const total = etfData.length;
-  const gainers = etfData.filter(e => e.dailyReturn > 0).length;
-  const losers = etfData.filter(e => e.dailyReturn < 0).length;
-  const avg = etfData.reduce((s,e)=> s + (isFinite(e.dailyReturn) ? e.dailyReturn : 0), 0) / (total || 1);
-  document.getElementById('totalETFs').textContent = total;
-  document.getElementById('gainers').textContent = gainers;
-  document.getElementById('losers').textContent = losers;
-  document.getElementById('avgReturn').textContent = (isFinite(avg) ? avg.toFixed(2) : '—') + '%';
-}
+/* ---------------- EVENTS ---------------- */
+document.getElementById("refreshBtn").addEventListener("click", loadAll);
+document.getElementById("exportBtn").addEventListener("click", ()=>{
+  // Export visible rows to CSV
+  const headers=["Ticker","Price","DailyReturn%","Yield","Expense","Assets","Frequency","Strategy","Risk"];
+  const csv = [headers.join(",")].concat(
+    Array.from(document.querySelectorAll("#tbody tr")).map(tr=>{
+      const tds = tr.querySelectorAll("td");
+      const cell = i=> tds[i]?.innerText?.replace(/[%,$]/g,"").replace(/\s+/g," ").trim() ?? "";
+      return [
+        cell(0), cell(1), cell(2), cell(3), cell(4), cell(5), cell(6), cell(7), cell(8)
+      ].join(",");
+    })
+  ).join("\n");
+  const blob = new Blob([csv],{type:"text/csv;charset=utf-8;"});
+  const url = URL.createObjectURL(blob);
+  const a = Object.assign(document.createElement("a"), {href:url, download:"etf_watchlist.csv"});
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+});
 
-function attachSort(){
-  document.querySelectorAll('th[data-col]').forEach(th => {
-    th.addEventListener('click', () => {
-      const col = th.getAttribute('data-col');
-      sortDir *= -1;
-      etfData.sort((a,b) => {
-        const av = a[col]; const bv = b[col];
-        if (typeof av === 'number' && typeof bv === 'number') {
-          return sortDir === 1 ? av - bv : bv - av;
-        }
-        return String(av ?? '').localeCompare(String(bv ?? '')) * (sortDir === 1 ? 1 : -1);
-      });
-      render();
-    });
+document.getElementById("search").addEventListener("input", e=>{
+  searchTerm = e.target.value.trim();
+  applyFilterSearchSort();
+});
+
+// filter chips
+document.querySelectorAll("#filters .chip").forEach(ch=>{
+  ch.addEventListener("click", ()=>{
+    document.querySelectorAll("#filters .chip").forEach(x=>x.classList.remove("active"));
+    ch.classList.add("active");
+    activeFilter = ch.dataset.filter;
+    applyFilterSearchSort();
   });
-}
+});
 
-document.getElementById('refreshBtn').addEventListener('click', load);
-attachSort();
-load();
-setInterval(load, 60 * 1000); // refresh every 60s
-</script>
-</body>
-</html>
+// sorting
+document.querySelectorAll("thead th[data-sort]").forEach(th=>{
+  th.addEventListener("click", ()=>{
+    const key = th.dataset.sort;
+    if (sortKey===key){ sortDir*=-1; } else { sortKey=key; sortDir=-1; }
+    applyFilterSearchSort();
+  });
+});
+
+/* ---------------- INIT ---------------- */
+loadAll();
+setInterval(loadAll, 60*1000); // refresh every 60s
+</
