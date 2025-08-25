@@ -19,9 +19,11 @@ body{font-family:Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sa
 .header{background:linear-gradient(180deg,var(--bg-3),var(--bg-2));border:1px solid var(--line);
   border-radius:16px;padding:22px 22px 18px;box-shadow:var(--shadow);margin-bottom:18px}
 .header-top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
-.title{font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--acc-1),var(--acc-2));
+.title{display:flex;align-items:center;gap:10px}
+.title .dot{width:16px;height:16px;border-radius:4px;background:linear-gradient(135deg,var(--acc-1),var(--acc-2))}
+.title h1{font-size:28px;font-weight:800;margin:0;background:linear-gradient(135deg,var(--acc-1),var(--acc-2));
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.subtitle{color:var(--txt-2);font-size:14px}
+.subtitle{color:var(--txt-2);font-size:14px;margin-top:2px}
 .actions{display:flex;gap:10px;align-items:center}
 .btn{background:linear-gradient(135deg,var(--acc-1),#0ea5e9);color:#00131c;border:none;border-radius:10px;
   padding:10px 14px;font-weight:700;cursor:pointer;box-shadow:0 6px 16px rgba(0,212,255,.25);transition:.18s}
@@ -75,15 +77,13 @@ tbody tr:hover{background:rgba(0,212,255,.05)}
 <div class="container">
   <div class="header">
     <div class="header-top">
-      <div>
-        <div class="title">📊 ETF Watchlist — Live Dashboard</div>
-        <div class="subtitle">Professional market data view for your Discord members</div>
-      </div>
+      <div class="title"><span class="dot"></span><h1>ETF Watchlist — Live Dashboard</h1></div>
       <div class="actions">
         <button class="btn" id="refreshBtn">🔄 Refresh</button>
         <button class="btn link-btn" id="csvBtn">⬇️ Export CSV</button>
       </div>
     </div>
+    <div class="subtitle">Professional market data view for your Discord members</div>
     <div class="last" id="lastUpdated">Ready…</div>
     <div class="summary">
       <div class="card"><div class="metric" id="m_total">-</div><div class="label">Total ETFs</div></div>
@@ -101,7 +101,7 @@ tbody tr:hover{background:rgba(0,212,255,.05)}
         <button class="pill" data-cat="Growth">Growth</button>
       </div>
       <input class="search" id="searchBox" placeholder="Search ticker or strategy…" />
-      <div class="note" id="sourceNote">Auto-refresh every 60s • Source: Finnhub (browser key)</div>
+      <div class="note" id="sourceNote">Auto-refresh every 60s • Source: secure proxy</div>
     </div>
   </div>
 
@@ -146,10 +146,10 @@ tbody tr:hover{background:rgba(0,212,255,.05)}
 </div>
 
 <script>
-/* ====== YOUR FINNHUB KEY (embedded) ====== */
-const DEFAULT_FINNHUB_KEY = "d2mco11r01qog4432megd2mco11r01qog4432mf0";
+/* === 1) Point this to your Vercel proxy === */
+const PROXY_URL = "https://YOUR-PROJECT.vercel.app/api/quote"; // <-- change this
 
-/* ====== CONFIG ====== */
+/* === 2) Tickers & metadata (same as before) === */
 const TICKERS = [
   "TLT","IEF","AGG","BND","CGCP","SHY","TLTW","AGGH",
   "SCHD","DVY","DGRO","VTV","FDL","DIVO","FDVV","SPYV","DIVB","DGRW","CGDV","VIG",
@@ -217,38 +217,37 @@ const CATEGORY_MAP = {
   "Growth":["SPY","VOO","QQQ","QQQM","SCHG","GARP","SPMO","SMH","VFLO","JQUA","CGGR","IWM","AVUV","XMMO","XSMO","CGCV","HELO"]
 };
 
-/* ====== STATE ====== */
+/* === UI state & helpers === */
 let rowsRaw=[]; let etfData=[];
 let filterCat="All"; let searchTerm="";
 let sortCol="ticker"; let sortDir=-1;
 
-/* ====== FINNHUB FETCH ====== */
-async function fetchFinnhubAll(symbols, key){
-  const base = "https://finnhub.io/api/v1/quote?symbol=";
-  const out = [];
-  for (const s of symbols){
-    const r = await fetch(`${base}${encodeURIComponent(s)}&token=${encodeURIComponent(key)}`, { cache:"no-store" });
-    if (!r.ok) throw new Error(`Finnhub failed for ${s}: ${r.status}`);
-    const j = await r.json();
-    out.push({
-      symbol: s,
-      price: Number.isFinite(j.c)? j.c : null,
-      changePercent: (Number.isFinite(j.c) && Number.isFinite(j.pc) && j.pc!==0) ? ((j.c - j.pc)/j.pc)*100 : (Number.isFinite(j.dp)? j.dp : null),
-      prevClose: Number.isFinite(j.pc)? j.pc : null,
-      time: j.t ? new Date(j.t*1000).toISOString() : null,
-      source: "Finnhub"
-    });
-    await new Promise(r=>setTimeout(r, 80)); // gentle pacing
+function fmtPct(x){ if(!isFinite(x)) return "—"; const s=x>0?"+":""; return s + x.toFixed(2) + "%"; }
+function fmtPrice(x){ return isFinite(x)? x.toFixed(2) : "—"; }
+
+function catOf(sym){
+  for (const [c,list] of Object.entries(CATEGORY_MAP)) if (list.includes(sym)) return c;
+  return "Uncategorized";
+}
+
+/* === Fetch from your secured proxy === */
+async function fetchFromProxy(symbols){
+  // Call in chunks so the URL stays sane
+  const CHUNK = 25;
+  let out = [];
+  for (let i=0;i<symbols.length;i+=CHUNK){
+    const slice = symbols.slice(i,i+CHUNK);
+    const url = `${PROXY_URL}?symbols=${encodeURIComponent(slice.join(","))}`;
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error(`Proxy error ${res.status}`);
+    const j = await res.json();
+    out = out.concat(j.data || []);
+    await new Promise(r=>setTimeout(r, 120));
   }
   return out;
 }
 
-/* ====== BUILD & RENDER ====== */
 function buildData(){
-  const catOf = (sym)=>{
-    for (const [c,list] of Object.entries(CATEGORY_MAP)) if (list.includes(sym)) return c;
-    return "Uncategorized";
-  };
   etfData = rowsRaw.map(r=>{
     const m = META[r.symbol] || {};
     return {
@@ -259,9 +258,6 @@ function buildData(){
     };
   });
 }
-
-function fmtPct(x){ if(!isFinite(x)) return "—"; const s=x>0?"+":""; return s + x.toFixed(2) + "%"; }
-function fmtPrice(x){ return isFinite(x)? x.toFixed(2) : "—"; }
 
 function renderSummary(){
   const total = etfData.length;
@@ -337,7 +333,7 @@ function renderTable(){
   });
 }
 
-/* ====== CSV ====== */
+/* === CSV === */
 function toCSV(rows){
   const header=["Ticker","Price","DailyReturn(%)","Yield","Expense","Assets","Frequency","Strategy","Risk","Category"];
   const esc=s=>`"${String(s??"").replace(/"/g,'""')}"`;
@@ -355,32 +351,32 @@ function downloadCSV(){
   a.href=url; a.download="etf_watchlist.csv"; a.click(); URL.revokeObjectURL(url);
 }
 
-/* ====== MAIN ====== */
+/* === Main load === */
 async function load(){
   const btn=document.getElementById("refreshBtn");
   const status=document.getElementById("status");
   const last=document.getElementById("lastUpdated");
   btn.disabled=true; status.className="status ok"; status.textContent="⏳ Updating…";
-
-  // use embedded key (works out-of-the-box). If user saved their own in this browser, prefer that:
-  const browserKey = (localStorage.getItem('FINNHUB_KEY')||'').trim();
-  const keyToUse = browserKey || DEFAULT_FINNHUB_KEY;
-
   try{
-    rowsRaw = await fetchFinnhubAll(TICKERS, keyToUse);
+    rowsRaw = await fetchFromProxy(TICKERS);
     if(!rowsRaw.length) throw new Error("No data received");
+    // normalize to {symbol, price, changePercent}
+    rowsRaw = rowsRaw.map(r => ({
+      symbol: r.symbol,
+      price: r.price,
+      changePercent: r.changePercent
+    }));
     buildData(); renderSummary(); renderMovers(); renderTable();
-    status.className="status ok"; status.textContent="✅ Live (Finnhub)";
+    status.className="status ok"; status.textContent="✅ Live (Secure Proxy)";
     last.textContent="Last updated: "+new Date().toLocaleString();
-    document.getElementById("sourceNote").textContent = "Auto-refresh every 60s • Source: Finnhub";
   }catch(err){
     console.error(err);
     status.className="status err";
-    status.textContent="❌ Data error. Check key or Refresh.";
+    status.textContent="❌ Data error — check PROXY_URL or try again.";
   }finally{ btn.disabled=false; }
 }
 
-/* ====== UI HOOKS ====== */
+/* === UI hooks === */
 document.getElementById("refreshBtn").addEventListener("click", load);
 document.getElementById("csvBtn").addEventListener("click", downloadCSV);
 document.querySelectorAll(".pill").forEach(p=>{
