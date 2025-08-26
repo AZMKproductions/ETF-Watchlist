@@ -16,6 +16,8 @@ body{font-family:Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sa
              radial-gradient(1200px 800px at 90% 10%,#0f1a2e 0%,transparent 55%),var(--bg-1);
   color:var(--txt-1);line-height:1.55}
 .container{max-width:1200px;margin:0 auto;padding:20px}
+
+/* HEADER (unchanged look) */
 .header{background:linear-gradient(180deg,var(--bg-3),var(--bg-2));border:1px solid var(--line);
   border-radius:16px;padding:22px 22px 18px;box-shadow:var(--shadow);margin-bottom:18px}
 .header-top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
@@ -32,15 +34,21 @@ body{font-family:Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sa
 .link-btn{background:transparent;border:1px solid var(--line);color:var(--txt-1)}
 .small-btn{background:transparent;border:1px dashed var(--line);color:var(--txt-2);padding:8px 10px;border-radius:10px}
 .last{color:var(--txt-2);font-size:13px}
+
+/* summary cards (unchanged format/colors) */
 .summary{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:12px 0}
 .card{background:var(--bg-2);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
-.metric{font-size:22px;font-weight:800;margin-bottom:4px}
+.metric{font-size:32px;font-weight:800;margin-bottom:4px}
 .label{color:var(--txt-2);font-size:12px}
+
+/* filters/search */
 .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0 16px}
 .pill{background:transparent;border:1px solid var(--line);color:var(--txt-1);padding:8px 12px;border-radius:999px;font-size:13px;cursor:pointer}
 .pill.active{background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(100,255,218,.15));border-color:#214d5a}
 .search{flex:1;min-width:200px;background:var(--bg-1);border:1px solid var(--line);color:var(--txt-1);padding:9px 12px;border-radius:10px}
 .note{color:var(--txt-2);font-size:12px}
+
+/* panels/movers */
 .panels{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .panel{background:var(--bg-2);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
 .panel h3{margin:0;padding:12px 14px;background:var(--bg-3);border-bottom:1px solid var(--line);font-size:14px}
@@ -50,6 +58,9 @@ body{font-family:Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sa
 .badge{padding:4px 8px;border-radius:8px;font-weight:700;font-size:12px;display:inline-block}
 .badge-pos{background:linear-gradient(135deg,var(--pos),#2dd4bf);color:#fff}
 .badge-neg{background:linear-gradient(135deg,var(--neg),#ef4444);color:#fff}
+.kit{display:inline-block;border:1px solid var(--line);border-radius:8px;padding:3px 6px;font-size:12px;margin-right:4px;color:#b6c3de}
+
+/* table */
 .table-wrap{background:var(--bg-2);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
 .table-head{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--bg-3);border-bottom:1px solid var(--line)}
 .table-title{font-weight:700}
@@ -66,12 +77,12 @@ tbody tr:hover{background:rgba(0,212,255,.05)}
 .pos{background:linear-gradient(135deg,var(--pos),#2dd4bf);color:#fff}
 .neg{background:linear-gradient(135deg,var(--neg),#ef4444);color:#fff}
 .neu{background:linear-gradient(135deg,#6b7280,#9ca3af);color:#fff}
-.kit{display:inline-block;border:1px solid var(--line);border-radius:8px;padding:3px 6px;font-size:12px;margin-right:4px;color:var(--txt-2)}
 .risk{font-weight:700}
 .foot{color:var(--txt-2);font-size:12px;margin:10px 2px}
 .errbox{margin:10px 0;padding:10px 12px;border-radius:10px;background:rgba(255,71,87,.12);border:1px solid rgba(255,71,87,.35);color:#ff808a;font-size:13px}
 .errbox code{color:#ffd2d6}
 .hidden{display:none}
+
 @media (max-width:1020px){.summary{grid-template-columns:repeat(3,1fr)}.panels{grid-template-columns:1fr}}
 @media (max-width:680px){.summary{grid-template-columns:repeat(2,1fr)} .toolbar{flex-direction:column;align-items:stretch}}
 </style>
@@ -89,6 +100,8 @@ tbody tr:hover{background:rgba(0,212,255,.05)}
     </div>
     <div class="subtitle">Professional market data view for your Discord members</div>
     <div class="last" id="lastUpdated">Ready…</div>
+
+    <!-- summary cards (unchanged layout) -->
     <div class="summary">
       <div class="card"><div class="metric" id="m_total">-</div><div class="label">Total ETFs</div></div>
       <div class="card"><div class="metric" id="m_gainers">-</div><div class="label">Gainers</div></div>
@@ -96,6 +109,7 @@ tbody tr:hover{background:rgba(0,212,255,.05)}
       <div class="card"><div class="metric" id="m_avg">-</div><div class="label">Avg Daily Return</div></div>
       <div class="card"><div class="metric" id="m_eqw">-</div><div class="label">Equal-Weight Day Return</div></div>
     </div>
+
     <div class="toolbar">
       <div>
         <button class="pill active" data-cat="All">All</button>
@@ -107,6 +121,7 @@ tbody tr:hover{background:rgba(0,212,255,.05)}
       <input class="search" id="searchBox" placeholder="Search ticker or strategy…" />
       <div class="note" id="sourceNote">Auto-refresh every <strong>2 minutes</strong> • Source: secure proxy</div>
     </div>
+
     <div id="errorBox" class="errbox hidden"></div>
   </div>
 
@@ -145,15 +160,15 @@ tbody tr:hover{background:rgba(0,212,255,.05)}
 </div>
 
 <script>
-/* ---------- Proxy URL (no code edits needed) ---------- */
+/* ---------- Proxy URL ---------- */
 const urlParamProxy = new URLSearchParams(location.search).get("proxy");
 if (urlParamProxy) localStorage.setItem("etf_proxy_url", urlParamProxy);
 let PROXY_URL = urlParamProxy || localStorage.getItem("etf_proxy_url") || "https://YOUR-PROJECT.vercel.app/api/quote";
 
-/* ---------- Data sets ---------- */
+/* ---------- Tickers & meta ---------- */
 const TICKERS=["TLT","IEF","AGG","BND","CGCP","SHY","TLTW","AGGH","SCHD","DVY","DGRO","VTV","FDL","DIVO","FDVV","SPYV","DIVB","DGRW","CGDV","VIG","CGCV","HELO","SPY","VOO","QQQ","QQQM","SCHG","GARP","SPMO","SMH","VFLO","JQUA","CGGR","JEPI","JEPQ","GPIQ","QQQI","GPIX","SPYI","QDVO","RSPA","IWMI","BALI","VYMI","IDVO","IWM","AVUV","XMMO","XSMO"];
 
-const META={TLT:{yield:"3-5%",expense:"0.15%",assets:"$49 B",frequency:"Monthly",strategy:"Fixed Income (Long-term)",risk:"High"},IEF:{yield:"3-4%",expense:"0.15%",assets:"$34 B",frequency:"Monthly",strategy:"Fixed Income (Medium-term)",risk:"Medium/High"},AGG:{yield:"3-4%",expense:"0.03%",assets:"$123 B",frequency:"Monthly",strategy:"Fixed Income (Mix)",risk:"Medium"},BND:{yield:"3-4%",expense:"0.03%",assets:"$353 B",frequency:"Monthly",strategy:"Fixed Income (Mix)",risk:"Medium"},CGCP:{yield:"4-5%",expense:"0.34%",assets:"$5 B",frequency:"Monthly",strategy:"Fixed Income (Mix)",risk:"Medium"},SHY:{yield:"3-4%",expense:"0.15%",assets:"$24 B",frequency:"Monthly",strategy:"Fixed Income (Short/Medium)",risk:"Low"},TLTW:{yield:"15-20%",expense:"0.35%",assets:"$1 B",frequency:"Monthly",strategy:"FI + High Income (Long-term)",risk:"Med/High + Income"},AGGH:{yield:"8-10%",expense:"0.29%",assets:"$300 M",frequency:"Monthly",strategy:"FI + High Income (Mix)",risk:"Med + Income"},SCHD:{yield:"3-4%",expense:"0.06%",assets:"$69 B",frequency:"Quarterly",strategy:"Dividend Growth (Value)",risk:"Med/High"},DVY:{yield:"3-4%",expense:"0.38%",assets:"$20 B",frequency:"Quarterly",strategy:"Dividend Growth (Value)",risk:"Med/High"},DGRO:{yield:"2-3%",expense:"0.08%",assets:"$31 B",frequency:"Quarterly",strategy:"Dividend Growth (Blend)",risk:"High"},VTV:{yield:"2-3%",expense:"0.04%",assets:"$181 B",frequency:"Quarterly",strategy:"Dividend Growth (Value)",risk:"Med/High"},FDL:{yield:"4%",expense:"0.45%",assets:"$31 B",frequency:"Quarterly",strategy:"Dividend Growth (Value)",risk:"Med/High"},DIVO:{yield:"4-6%",expense:"0.56%",assets:"$4.4 B",frequency:"Monthly",strategy:"Dividend Growth (Value)",risk:"Med/High"},FDVV:{yield:"2-4%",expense:"0.16%",assets:"$5.2 B",frequency:"Quarterly",strategy:"Dividend Growth (Growth)",risk:"High"},SPYV:{yield:"2%",expense:"0.04%",assets:"$26.2 B",frequency:"Quarterly",strategy:"Dividend Growth (Growth)",risk:"High"},DIVB:{yield:"2-3%",expense:"0.05%",assets:"~$1 B",frequency:"Quarterly",strategy:"Dividend Growth (Growth)",risk:"High"},DGRW:{yield:"1.5-2%",expense:"0.29%",assets:"$15 B",frequency:"Monthly",strategy:"Dividend Growth (Growth)",risk:"High"},CGDV:{yield:"1.5-2%",expense:"0.33%",assets:"$16.4 B",frequency:"Quarterly",strategy:"Dividend Growth (Growth)",risk:"High"},VIG:{yield:"1-2%",expense:"0.05%",assets:"$105 B",frequency:"Quarterly",strategy:"Dividend Growth (Growth)",risk:"High"},CGCV:{yield:"1-2%",expense:"0.33%",assets:"$900 M",frequency:"Quarterly",strategy:"Conservative Growth",risk:"Medium"},HELO:{yield:"<1%",expense:"0.50%",assets:"$3 B",frequency:"Quarterly",strategy:"Conservative Growth",risk:"Med/High"},SPY:{yield:"<1.5%",expense:"0.09%",assets:"$600 B",frequency:"Quarterly",strategy:"Growth",risk:"High"},VOO:{yield:"<1.5%",expense:"0.03%",assets:"$1.33 T",frequency:"Quarterly",strategy:"Growth",risk:"High"},QQQ:{yield:"<1%",expense:"0.20%",assets:"$330 B",frequency:"Quarterly",strategy:"Growth",risk:"Very High"},QQQM:{yield:"<1%",expense:"0.15%",assets:"$49 B",frequency:"Quarterly",strategy:"Growth",risk:"Very High"},SCHG:{yield:"<1%",expense:"0.04%",assets:"$41 B",frequency:"Quarterly",strategy:"Growth",risk:"Very High"},GARP:{yield:"<1%",expense:"0.15%",assets:"$430 M",frequency:"Quarterly",strategy:"Growth",risk:"Very High"},SPMO:{yield:"<1%",expense:"0.13%",assets:"$7.5 B",frequency:"Quarterly",strategy:"Growth",risk:"Very High"},SMH:{yield:"<1%",expense:"0.35%",assets:"$22 B",frequency:"Annual",strategy:"Growth",risk:"Very High"},VFLO:{yield:"1-2%",expense:"0.39%",assets:"$4 B",frequency:"Monthly",strategy:"Growth",risk:"Very High"},JQUA:{yield:"1-2%",expense:"0.12%",assets:"$6.2 B",frequency:"Quarterly",strategy:"Growth",risk:"High"},CGGR:{yield:"<1%",expense:"0.39%",assets:"$12.1 B",frequency:"Quarterly",strategy:"Growth",risk:"Very High"},JEPI:{yield:"7-10%",expense:"0.35%",assets:"$40 B",frequency:"Monthly",strategy:"Value + High Income",risk:"Med + Income"},JEPQ:{yield:"9-12%",expense:"0.35%",assets:"$25 B",frequency:"Monthly",strategy:"Growth + High Income",risk:"High + Income"},GPIQ:{yield:"8-11%",expense:"0.29%",assets:"$800 M",frequency:"Monthly",strategy:"Growth + High Income",risk:"High + Income"},QQQI:{yield:"12-15%",expense:"0.68%",assets:"$1.6 B",frequency:"Monthly",strategy:"Growth + High Income",risk:"High + Income"},GPIX:{yield:"7-10%",expense:"0.29%",assets:"$800 M",frequency:"Monthly",strategy:"Growth + High Income",risk:"Med/High + Income"},SPYI:{yield:"11-13%",expense:"0.68%",assets:"$3.5 B",frequency:"Monthly",strategy:"Growth + High Income",risk:"Med/High + Income"},QDVO:{yield:"9-12%",expense:"0.55%",assets:"$50 M",frequency:"Monthly",strategy:"Growth + High Income",risk:"High + Income"},RSPA:{yield:"9-10%",expense:"0.29%",assets:"$430 M",frequency:"Monthly",strategy:"Balanced Growth + High Income",risk:"High + Income"},IWMI:{yield:"14-15%",expense:"0.68%",assets:"$250 M",frequency:"Monthly",strategy:"Growth + High Income",risk:"Very High + Income"},BALI:{yield:"8-10%",expense:"0.35%",assets:"$330 M",frequency:"Monthly",strategy:"Growth + High Income",risk:"High + Income"},VYMI:{yield:"3-4%",expense:"0.17%",assets:"$10.2 B",frequency:"Quarterly",strategy:"International Dividend Growth",risk:"Med/High"},IDVO:{yield:"4-6%",expense:"0.66%",assets:"$260 M",frequency:"Monthly",strategy:"Intl Div Growth/High Income",risk:"Med/High + Income"},IWM:{yield:"<1%",expense:"0.19%",assets:"$63 B",frequency:"Quarterly",strategy:"Small Cap Growth",risk:"Very High"},AVUV:{yield:"1-2%",expense:"0.25%",assets:"$15.6 B",frequency:"Quarterly",strategy:"Small Cap Growth",risk:"Very High"},XMMO:{yield:"<1%",expense:"0.34%",assets:"$3.8 B",frequency:"Quarterly",strategy:"Mid Cap Growth",risk:"Very High"},XSMO:{yield:"<1%",expense:"0.39%",assets:"$1.5 B",frequency:"Quarterly",strategy:"Small Cap Growth",risk:"Very High"}};
+const META={TLT:{yield:"3-5%",expense:"0.15%",frequency:"Monthly",strategy:"Fixed Income (Long-term)",risk:"High"},IEF:{yield:"3-4%",expense:"0.15%",frequency:"Monthly",strategy:"Fixed Income (Medium-term)",risk:"Medium/High"},AGG:{yield:"3-4%",expense:"0.03%",frequency:"Monthly",strategy:"Fixed Income (Mix)",risk:"Medium"},BND:{yield:"3-4%",expense:"0.03%",frequency:"Monthly",strategy:"Fixed Income (Mix)",risk:"Medium"},CGCP:{yield:"4-5%",expense:"0.34%",frequency:"Monthly",strategy:"Fixed Income (Mix)",risk:"Medium"},SHY:{yield:"3-4%",expense:"0.15%",frequency:"Monthly",strategy:"Fixed Income (Short/Medium)",risk:"Low"},TLTW:{yield:"15-20%",expense:"0.35%",frequency:"Monthly",strategy:"FI + High Income (Long-term)",risk:"Med/High + Income"},AGGH:{yield:"8-10%",expense:"0.29%",frequency:"Monthly",strategy:"FI + High Income (Mix)",risk:"Med + Income"},SCHD:{yield:"3-4%",expense:"0.06%",frequency:"Quarterly",strategy:"Dividend Growth (Value)",risk:"Med/High"},DVY:{yield:"3-4%",expense:"0.38%",frequency:"Quarterly",strategy:"Dividend Growth (Value)",risk:"Med/High"},DGRO:{yield:"2-3%",expense:"0.08%",frequency:"Quarterly",strategy:"Dividend Growth (Blend)",risk:"High"},VTV:{yield:"2-3%",expense:"0.04%",frequency:"Quarterly",strategy:"Dividend Growth (Value)",risk:"Med/High"},FDL:{yield:"4%",expense:"0.45%",frequency:"Quarterly",strategy:"Dividend Growth (Value)",risk:"Med/High"},DIVO:{yield:"4-6%",expense:"0.56%",frequency:"Monthly",strategy:"Dividend Growth (Value)",risk:"Med/High"},FDVV:{yield:"2-4%",expense:"0.16%",frequency:"Quarterly",strategy:"Dividend Growth (Growth)",risk:"High"},SPYV:{yield:"2%",expense:"0.04%",frequency:"Quarterly",strategy:"Dividend Growth (Growth)",risk:"High"},DIVB:{yield:"2-3%",expense:"0.05%",frequency:"Quarterly",strategy:"Dividend Growth (Growth)",risk:"High"},DGRW:{yield:"1.5-2%",expense:"0.29%",frequency:"Monthly",strategy:"Dividend Growth (Growth)",risk:"High"},CGDV:{yield:"1.5-2%",expense:"0.33%",frequency:"Quarterly",strategy:"Dividend Growth (Growth)",risk:"High"},VIG:{yield:"1-2%",expense:"0.05%",frequency:"Quarterly",strategy:"Dividend Growth (Growth)",risk:"High"},CGCV:{yield:"1-2%",expense:"0.33%",frequency:"Quarterly",strategy:"Conservative Growth",risk:"Medium"},HELO:{yield:"<1%",expense:"0.50%",frequency:"Quarterly",strategy:"Conservative Growth",risk:"Med/High"},SPY:{yield:"<1.5%",expense:"0.09%",frequency:"Quarterly",strategy:"Growth",risk:"High"},VOO:{yield:"<1.5%",expense:"0.03%",frequency:"Quarterly",strategy:"Growth",risk:"High"},QQQ:{yield:"<1%",expense:"0.20%",frequency:"Quarterly",strategy:"Growth",risk:"Very High"},QQQM:{yield:"<1%",expense:"0.15%",frequency:"Quarterly",strategy:"Growth",risk:"Very High"},SCHG:{yield:"<1%",expense:"0.04%",frequency:"Quarterly",strategy:"Growth",risk:"Very High"},GARP:{yield:"<1%",expense:"0.15%",frequency:"Quarterly",strategy:"Growth",risk:"Very High"},SPMO:{yield:"<1%",expense:"0.13%",frequency:"Quarterly",strategy:"Growth",risk:"Very High"},SMH:{yield:"<1%",expense:"0.35%",frequency:"Annual",strategy:"Growth",risk:"Very High"},VFLO:{yield:"1-2%",expense:"0.39%",frequency:"Monthly",strategy:"Growth",risk:"Very High"},JQUA:{yield:"1-2%",expense:"0.12%",frequency:"Quarterly",strategy:"Growth",risk:"High"},CGGR:{yield:"<1%",expense:"0.39%",frequency:"Quarterly",strategy:"Growth",risk:"Very High"},JEPI:{yield:"7-10%",expense:"0.35%",frequency:"Monthly",strategy:"Value + High Income",risk:"Med + Income"},JEPQ:{yield:"9-12%",expense:"0.35%",frequency:"Monthly",strategy:"Growth + High Income",risk:"High + Income"},GPIQ:{yield:"8-11%",expense:"0.29%",frequency:"Monthly",strategy:"Growth + High Income",risk:"High + Income"},QQQI:{yield:"12-15%",expense:"0.68%",frequency:"Monthly",strategy:"Growth + High Income",risk:"High + Income"},GPIX:{yield:"7-10%",expense:"0.29%",frequency:"Monthly",strategy:"Growth + High Income",risk:"Med/High + Income"},SPYI:{yield:"11-13%",expense:"0.68%",frequency:"Monthly",strategy:"Growth + High Income",risk:"Med/High + Income"},QDVO:{yield:"9-12%",expense:"0.55%",frequency:"Monthly",strategy:"Growth + High Income",risk:"High + Income"},RSPA:{yield:"9-10%",expense:"0.29%",frequency:"Monthly",strategy:"Balanced Growth + High Income",risk:"High + Income"},IWMI:{yield:"14-15%",expense:"0.68%",frequency:"Monthly",strategy:"Growth + High Income",risk:"Very High + Income"},BALI:{yield:"8-10%",expense:"0.35%",frequency:"Monthly",strategy:"Growth + High Income",risk:"High + Income"},VYMI:{yield:"3-4%",expense:"0.17%",frequency:"Quarterly",strategy:"International Dividend Growth",risk:"Med/High"},IDVO:{yield:"4-6%",expense:"0.66%",frequency:"Monthly",strategy:"Intl Div Growth/High Income",risk:"Med/High + Income"},IWM:{yield:"<1%",expense:"0.19%",frequency:"Quarterly",strategy:"Small Cap Growth",risk:"Very High"},AVUV:{yield:"1-2%",expense:"0.25%",frequency:"Quarterly",strategy:"Small Cap Growth",risk:"Very High"},XMMO:{yield:"<1%",expense:"0.34%",frequency:"Quarterly",strategy:"Mid Cap Growth",risk:"Very High"},XSMO:{yield:"<1%",expense:"0.39%",frequency:"Quarterly",strategy:"Small Cap Growth",risk:"Very High"}};
 
 const CATEGORY_MAP={"Bonds":["TLT","IEF","AGG","BND","CGCP","SHY"],"High Income":["JEPI","JEPQ","GPIQ","QQQI","GPIX","SPYI","QDVO","RSPA","IWMI","BALI","TLTW","AGGH","IDVO"],"Dividend":["SCHD","DVY","DGRO","VTV","FDL","DIVO","FDVV","SPYV","DIVB","DGRW","CGDV","VIG","VYMI"],"Growth":["SPY","VOO","QQQ","QQQM","SCHG","GARP","SPMO","SMH","VFLO","JQUA","CGGR","IWM","AVUV","XMMO","XSMO","CGCV","HELO"]};
 
@@ -166,9 +181,6 @@ function showError(msg, detail){
   errorBox.classList.remove("hidden");
   errorBox.innerHTML = `❌ <strong>${msg}</strong>` + (detail? `<div><code>${detail}</code></div>`:"");
 }
-function clearError(){ errorBox.classList.add("hidden"); errorBox.textContent=""; }
-
-/* ---------- Helpers ---------- */
 function fmtPct(x){ if(!isFinite(x)) return "—"; const s=x>0?"+":""; return s + x.toFixed(2) + "%"; }
 function fmtPrice(x){ return isFinite(x)? x.toFixed(2) : "—"; }
 function catOf(sym){ for (const [c,list] of Object.entries(CATEGORY_MAP)) if (list.includes(sym)) return c; return "Uncategorized"; }
@@ -197,8 +209,7 @@ function buildData(){
     const m=META[r.symbol]||{};
     return {ticker:r.symbol,price:r.price,dailyReturn:r.changePercent,
       yield:m.yield||"—",expense:m.expense||"—",
-      /* assets removed */ frequency:m.frequency||"—",
-      strategy:m.strategy||"—",risk:m.risk||"—",category:catOf(r.symbol)};
+      frequency:m.frequency||"—",strategy:m.strategy||"—",risk:m.risk||"—",category:catOf(r.symbol)};
   });
 }
 function renderSummary(){
@@ -229,17 +240,16 @@ function renderMovers(){
   const ll=document.getElementById("losersList");
   gl.innerHTML=""; ll.innerHTML="";
 
-  // Gainers: show sign only if positive; if negative, show red (no fake '+')
+  // FIX: only prepend '+' if positive. Negative shows naturally.
   top.forEach(e=>{
     const li=document.createElement("li"); li.className="item";
-    const sign = e.dailyReturn > 0 ? "+" : "";  // <-- fix '+-' duplication
+    const sign = e.dailyReturn > 0 ? "+" : "";
     const klass = e.dailyReturn > 0 ? "badge-pos" : (e.dailyReturn < 0 ? "badge-neg" : "badge-pos");
     li.innerHTML=`<span><strong>${e.ticker}</strong> <span class="kit">${e.category}</span></span>
                   <span class="badge ${klass}">${sign}${e.dailyReturn.toFixed(2)}%</span>`;
     gl.appendChild(li);
   });
 
-  // Losers: natural negative sign from value
   bot.forEach(e=>{
     const li=document.createElement("li"); li.className="item";
     li.innerHTML=`<span><strong>${e.ticker}</strong> <span class="kit">${e.category}</span></span>
@@ -262,7 +272,6 @@ function renderTable(){
       <td><span class="daily ${cls}">${fmtPct(e.dailyReturn)}</span></td>
       <td><span class="kit">${e.yield}</span></td>
       <td><span class="kit">${e.expense}</span></td>
-      <!-- Assets column removed -->
       <td>${e.frequency}</td>
       <td>${e.strategy}</td>
       <td><span class="risk" style="color:${riskColor}">${e.risk}</span></td>
@@ -271,9 +280,8 @@ function renderTable(){
   });
 }
 
-/* ---------- CSV ---------- */
+/* ---------- CSV (assets removed) ---------- */
 function toCSV(rows){
-  // Assets removed from CSV header and rows
   const header=["Ticker","Price","DailyReturn(%)","Yield","Expense","Frequency","Strategy","Risk","Category"];
   const esc=s=>`"${String(s??"").replace(/"/g,'""')}"`;
   const out=[header.join(",")];
@@ -291,21 +299,19 @@ function downloadCSV(){
 }
 
 /* ---------- Main load ---------- */
+const errorBoxEl = document.getElementById("errorBox");
+function clearError(){ errorBoxEl.classList.add("hidden"); errorBoxEl.textContent=""; }
 async function load(){
   const btn=document.getElementById("refreshBtn"); const status=document.getElementById("status"); const last=document.getElementById("lastUpdated");
   clearError(); btn.disabled=true; status.className="status ok"; status.textContent="⏳ Updating…";
-
   document.getElementById("sourceNote").innerHTML =
     `Auto-refresh every <strong>2 minutes</strong> • Source: ${PROXY_URL.replace(/^https?:\/\//,'')}`;
-
   try{
-    const healthURL = PROXY_URL.replace(/\/api\/quote(\/*)?$/i,"/api/health");
-    const ping = await fetch(healthURL, { cache: "no-store" });
-    if (!ping.ok) throw new Error(`Health HTTP ${ping.status}`);
+    const ping = await fetch(PROXY_URL.replace(/\/api\/quote(\/*)?$/i,"/api/health"),{cache:"no-store"});
+    if(!ping.ok) throw new Error(`Health HTTP ${ping.status}`);
   }catch(e){
     showError("Proxy health failed. Check your Vercel URL (should end with /api/quote).", e.message);
   }
-
   try{
     rowsRaw=await fetchFromProxy(TICKERS);
     if(!rowsRaw.length) throw new Error("No data received");
@@ -314,9 +320,7 @@ async function load(){
     status.className="status ok"; status.textContent="✅ Live (Secure Proxy)";
     last.textContent="Last updated: "+new Date().toLocaleString();
   }catch(err){
-    console.error(err);
-    status.className="status err";
-    status.textContent="❌ Data error";
+    status.className="status err"; status.textContent="❌ Data error";
     showError("Data error — check PROXY_URL or try again.", err.message || String(err));
   }finally{ btn.disabled=false; }
 }
@@ -337,7 +341,7 @@ document.getElementById("searchBox").addEventListener("input",(e)=>{searchTerm=e
 document.querySelectorAll("th[data-col]").forEach(th=>th.addEventListener("click",()=>{const col=th.getAttribute("data-col");if(sortCol===col){sortDir*=-1}else{sortCol=col;sortDir=-1}renderTable();}));
 
 load();
-setInterval(load, 120000);
+setInterval(load,120000);
 </script>
 </body>
 </html>
