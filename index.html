@@ -163,7 +163,7 @@ tbody tr:hover{background:rgba(0,212,255,.05)}
 /* ---------- Proxy URL ---------- */
 const urlParamProxy = new URLSearchParams(location.search).get("proxy");
 if (urlParamProxy) localStorage.setItem("etf_proxy_url", urlParamProxy);
-let PROXY_URL = urlParamProxy || localStorage.getItem("etf_proxy_url") || "https://YOUR-PROJECT.vercel.app/api/quote";
+let PROXY_URL = urlParamProxy || localStorage.getItem("etf_proxy_url") || "https://etf-proxy.vercel.app/api/quote";
 
 /* ---------- Tickers & meta ---------- */
 const TICKERS=["TLT","IEF","AGG","BND","CGCP","SHY","TLTW","AGGH","SCHD","DVY","DGRO","VTV","FDL","DIVO","FDVV","SPYV","DIVB","DGRW","CGDV","VIG","CGCV","HELO","SPY","VOO","QQQ","QQQM","SCHG","GARP","SPMO","SMH","VFLO","JQUA","CGGR","JEPI","JEPQ","GPIQ","QQQI","GPIX","SPYI","QDVO","RSPA","IWMI","BALI","VYMI","IDVO","IWM","AVUV","XMMO","XSMO"];
